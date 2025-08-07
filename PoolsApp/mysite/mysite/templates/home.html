@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Project</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    {% include 'partials/navbar.html' %}
+    <div class="container mt-4">
+        <h1>Welcome to My Django Project!</h1>
+        <p>This is the home page. You can navigate to the polls section to participate in polls.</p>
+        <a href="{% url 'polls:index' %}" class="btn btn-primary">Go to Polls</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

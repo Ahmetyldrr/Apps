@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+
+<div class="row mt-5">
+    <div class="col-md-8">
+        <h1 class="display-4">Tahmin Modeline Hoşgeldiniz</h1>
+        <p class="lead">Veritabanındaki kişiler:</p>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Adı Soyadı</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for kisi in kisiler %}
+                <tr>
+                    <td>{{ kisi.idx }}</td>
+                    <td>{{ kisi.adi_soyadi }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">Kayıt yok.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<div class="row mt-5">
+
+
+    
+    <div class="col-md-4">
+        
+        <div class="card shadow">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV1MB3K_pE3NGQyTNJwmqh3VA4ZjtlVKDayQ&s" class="card-img-top" alt="Model">
+            <div class="card-body">
+                <h5 class="card-title">Öne Çıkan Model</h5>
+                <p class="card-text">En güncel tahmin modelimizi keşfedin ve detaylarını inceleyin.</p>
+                <a href="{% url 'detail' %}" class="btn btn-primary">Detaylara Git</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-8">
+
+
+        <h1 class="display-4">Tahmin Modeline Hoşgeldiniz</h1>
+        <p class="lead">Bu platformda çeşitli tahmin modellerini inceleyebilir, detaylarını görebilir ve iletişime geçebilirsiniz.</p>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV1MB3K_pE3NGQyTNJwmqh3VA4ZjtlVKDayQ&s" class="img-fluid rounded shadow" alt="Tahmin Modeli">
+
+
+    </div>
+
+
+
+
+
+
+</div>
+
+{% endblock %}
+
+

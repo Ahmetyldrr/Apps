@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}Enerji Piyasası Analizi - Forecast Models{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">⚡ Enerji Piyasası Analizi</h1>
+    </div>
+</div>
+
+<!-- İstatistikler -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-primary">📊 Toplam Veri</h5>
+                <h3>{{ stats.count }}</h3>
+                <small class="text-muted">Kayıt</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-success">💰 Ortalama PTF</h5>
+                <h3>{{ stats.ptf_mean|floatformat:2 }}</h3>
+                <small class="text-muted">TL/MWh</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-warning">⚡ Ortalama SMF</h5>
+                <h3>{{ stats.smf_mean|floatformat:2 }}</h3>
+                <small class="text-muted">TL/MWh</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title text-info">📅 Tarih Aralığı</h5>
+                <h6>{{ stats.first_date }}</h6>
+                <h6>{{ stats.last_date }}</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grafikler -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>📈 Enerji Piyasası Grafikleri</h5>
+            </div>
+            <div class="card-body">
+                {% if chart_data %}
+                    <img src="data:image/png;base64,{{ chart_data }}" class="img-fluid" alt="Enerji Piyasası Grafikleri">
+                {% else %}
+                    <p class="text-muted">Grafik oluşturulamadı.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SMF Yön Dağılımı -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>🎯 SMF Yön Dağılımı</h5>
+            </div>
+            <div class="card-body">
+                {% for direction, count in smf_distribution.items %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>
+                            {% if direction == 'enerji_acigi' %}
+                                🔴 Enerji Açığı
+                            {% elif direction == 'enerji_fazlasi' %}
+                                🟢 Enerji Fazlası
+                            {% else %}
+                                🟡 Dengede
+                            {% endif %}
+                        </span>
+                        <span class="badge bg-primary">{{ count }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>🕐 Saatlik Ortalamalar</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                    <table class="table table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Saat</th>
+                                <th>Ort. PTF</th>
+                                <th>Ort. SMF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for hour, values in hourly_avg.iterrows %}
+                                <tr>
+                                    <td>{{ hour }}:00</td>
+                                    <td>{{ values.ptf|floatformat:2 }}</td>
+                                    <td>{{ values.smf|floatformat:2 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Analizi -->
+{% if ai_analysis.status == 'success' %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="ai-analysis">
+            <h5>🧠 AI Piyasa Analizi</h5>
+            <p>{{ ai_analysis.analysis|linebreaks }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Son Veriler -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>📋 Son Veriler (İlk 100 Kayıt)</h5>
+                <a href="{% url 'smf_prediction' %}" class="btn btn-success btn-sm">
+                    🤖 SMF Yön Tahmini
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Saat</th>
+                                <th>PTF</th>
+                                <th>SMF</th>
+                                <th>Pos. Dengesizlik</th>
+                                <th>Neg. Dengesizlik</th>
+                                <th>SMF Yön</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in data %}
+                                <tr>
+                                    <td>{{ item.date }}</td>
+                                    <td>{{ item.hour }}</td>
+                                    <td>{{ item.ptf|floatformat:2 }}</td>
+                                    <td>{{ item.smf|floatformat:2 }}</td>
+                                    <td>{{ item.positive_imbalance_price|floatformat:2 }}</td>
+                                    <td>{{ item.negative_imbalance_price|floatformat:2 }}</td>
+                                    <td>
+                                        {% if item.smf_direction == 'enerji_acigi' %}
+                                            <span class="badge bg-danger">Enerji Açığı</span>
+                                        {% elif item.smf_direction == 'enerji_fazlasi' %}
+                                            <span class="badge bg-success">Enerji Fazlası</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Dengede</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DjangoApiApp - Copilot Instructions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #fff;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 90%;
+            color: #d63384;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            border-left: 4px solid #3498db;
+        }
+        
+        ul, ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        hr {
+            border: none;
+            height: 2px;
+            background-color: #eee;
+            margin: 30px 0;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 15px;
+                font-size: 12pt;
+            }
+            
+            h1 {
+                font-size: 18pt;
+                page-break-after: avoid;
+            }
+            
+            h2 {
+                font-size: 14pt;
+                page-break-after: avoid;
+            }
+            
+            pre, code {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>DjangoApiApp - Kapsamlı Geliştirici Kılavuzu</h1>
+<h2>🏗️ Proje Genel Yapısı ve Mimari</h2>
+<h3>Proje Hiyerarşisi</h3>
+<div class="codehilite"><pre><span></span><code>DjangoApiApp/
+├── manage.py                    # Django&#39;nun ana komut arayüzü
+├── db.sqlite3                   # SQLite veritabanı dosyası
+├── forecast_api/                # Ana proje konfigürasyonu
+│   ├── __init__.py
+│   ├── settings.py              # Proje ayarları (KRITIK)
+│   ├── urls.py                  # Ana URL yönlendirmeleri
+│   ├── wsgi.py                  # WSGI server konfigürasyonu
+│   └── asgi.py                  # ASGI server konfigürasyonu
+└── data_generator/              # Ana uygulama modülü
+    ├── models.py                # Veri modelleri (ForecastData)
+    ├── views.py                 # İş mantığı ve API endpoint&#39;leri
+    ├── urls.py                  # Uygulama URL&#39;leri
+    ├── serializers.py           # REST API serializers
+    ├── admin.py                 # Django admin konfigürasyonu
+    ├── apps.py                  # Uygulama konfigürasyonu
+    ├── tests.py                 # Unit testler (boş)
+    ├── migrations/              # Veritabanı migrasyon dosyaları
+    │   ├── 0001_initial.py      # İlk migrasyon
+    │   └── __init__.py
+    └── templates/data_generator/
+        └── forecast_dashboard.html  # Dashboard HTML template&#39;i
+</code></pre></div>
+
+<h3>Mimari Prensipleri</h3>
+<ul>
+<li><strong>Monolitik Django Yapısı</strong>: Tek proje altında organizasyon</li>
+<li><strong>MVT Pattern</strong>: Model-View-Template Django design pattern'i</li>
+<li><strong>REST API + Web Dashboard</strong>: Hibrit yaklaşım (API + geleneksel web)</li>
+<li><strong>SQLite Backend</strong>: Geliştirme için hafif veritabanı çözümü</li>
+</ul>
+<h2>🔧 Teknoloji Stack'i ve Bağımlılıklar</h2>
+<h3>Core Framework</h3>
+<ul>
+<li><strong>Django 5.2.4</strong>: Ana web framework</li>
+<li><strong>Django REST Framework</strong>: API geliştirme için</li>
+<li><strong>SQLite</strong>: Veritabanı (production'da PostgreSQL önerilir)</li>
+</ul>
+<h3>Veri İşleme Kütüphaneleri</h3>
+<ul>
+<li><strong>pandas</strong>: Excel dosya oluşturma ve veri manipülasyonu</li>
+<li><strong>xlsxwriter</strong>: Excel dosya yazma motoru</li>
+<li><strong>random</strong>: Sentetik veri üretimi</li>
+<li><strong>datetime</strong>: Tarih işlemleri</li>
+</ul>
+<h3>Kurulum Gereksinimleri</h3>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">django</span><span class="o">==</span><span class="m">5</span>.2.4
+pip<span class="w"> </span>install<span class="w"> </span>djangorestframework
+pip<span class="w"> </span>install<span class="w"> </span>pandas
+pip<span class="w"> </span>install<span class="w"> </span>xlsxwriter
+</code></pre></div>
+
+<h2>📊 Veri Modeli ve Veritabanı Yapısı</h2>
+<h3>ForecastData Modeli Detayları</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># data_generator/models.py</span>
+<span class="k">class</span> <span class="nc">ForecastData</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">product_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>     <span class="c1"># Ürün adı</span>
+    <span class="n">forecast_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>                  <span class="c1"># Tahmin tarihi</span>
+    <span class="n">sales_forecast</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>              <span class="c1"># Satış tahmini (sayısal)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">product_name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">forecast_date</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+<h3>Veritabanı İşlemleri</h3>
+<ul>
+<li><strong>Tablo Adı</strong>: <code>data_generator_forecastdata</code></li>
+<li><strong>Primary Key</strong>: Otomatik ID (BigAutoField)</li>
+<li><strong>İndeksler</strong>: Tarih bazlı sorgular için forecast_date önerilir</li>
+<li><strong>Veri Hacmi</strong>: 100 kayıt/seferlik batch işlem</li>
+</ul>
+<h3>Migrasyon Stratejisi</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Yeni migrasyon oluşturma</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>makemigrations<span class="w"> </span>data_generator
+
+<span class="c1"># Migrasyonları uygulama</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>migrate
+
+<span class="c1"># Migrasyon durumunu kontrol etme</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>showmigrations
+</code></pre></div>
+
+<h2>🌐 API Endpoint'leri ve URL Yapısı</h2>
+<h3>URL Routing Hiyerarşisi</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">forecast_api</span><span class="o">/</span><span class="n">urls</span><span class="o">.</span><span class="n">py</span><span class="w"> </span><span class="p">(</span><span class="n">Ana</span><span class="w"> </span><span class="n">routing</span><span class="p">)</span>
+<span class="err">├──</span><span class="w"> </span><span class="o">/</span><span class="n">admin</span><span class="o">/</span><span class="w">                      </span><span class="err">→</span><span class="w"> </span><span class="n">Django</span><span class="w"> </span><span class="n">Admin</span><span class="w"> </span><span class="n">Panel</span>
+<span class="err">└──</span><span class="w"> </span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="w">                        </span><span class="err">→</span><span class="w"> </span><span class="n">data_generator</span><span class="o">.</span><span class="n">urls</span><span class="w"> </span><span class="n">include</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="w">                    </span><span class="err">→</span><span class="w"> </span><span class="n">ForecastDashboardView</span><span class="w"> </span><span class="p">(</span><span class="n">Dashboard</span><span class="p">)</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">generate</span><span class="o">-</span><span class="n">forecast</span><span class="o">/</span><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="n">GenerateForecastView</span><span class="w"> </span><span class="p">(</span><span class="n">Veri</span><span class="w"> </span><span class="err">ü</span><span class="n">retimi</span><span class="p">)</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">download</span><span class="o">-</span><span class="n">forecast</span><span class="o">/</span><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="n">DownloadForecastView</span><span class="w"> </span><span class="p">(</span><span class="n">Excel</span><span class="w"> </span><span class="n">indirme</span><span class="p">)</span>
+</code></pre></div>
+
+<h3>API Endpoint Detayları</h3>
+<h4>1. Dashboard Endpoint (<code>/api/</code>)</h4>
+<ul>
+<li><strong>View</strong>: <code>ForecastDashboardView</code></li>
+<li><strong>Method</strong>: GET</li>
+<li><strong>Return</strong>: HTML template render</li>
+<li><strong>Context</strong>: Tüm ForecastData kayıtları (tarih sıralı)</li>
+<li><strong>Template</strong>: <code>data_generator/forecast_dashboard.html</code></li>
+</ul>
+<h4>2. Veri Üretimi Endpoint (<code>/api/generate-forecast/</code>)</h4>
+<ul>
+<li><strong>View</strong>: <code>GenerateForecastView</code></li>
+<li><strong>Method</strong>: GET (POST değil - önemli!)</li>
+<li><strong>İş Akışı</strong>:</li>
+<li>Mevcut tüm verileri sil (<code>ForecastData.objects.all().delete()</code>)</li>
+<li>100 adet rastgele veri üret (<code>generate_synthetic_data()</code>)</li>
+<li>Dashboard'a redirect (<code>redirect('forecast-dashboard')</code>)</li>
+<li><strong>Veri Üretim Algoritması</strong>:
+  <code>python
+  product_names = ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+  forecast_date = bugün + random(1-90 gün)
+  sales_forecast = random(50-1000)</code></li>
+</ul>
+<h4>3. Excel İndirme Endpoint (<code>/api/download-forecast/</code>)</h4>
+<ul>
+<li><strong>View</strong>: <code>DownloadForecastView</code></li>
+<li><strong>Method</strong>: GET</li>
+<li><strong>Return</strong>: Excel dosyası (binary stream)</li>
+<li><strong>Dosya Adı</strong>: <code>forecast_data.xlsx</code></li>
+<li><strong>İş Akışı</strong>:</li>
+<li>Veritabanından tüm verileri çek</li>
+<li>Pandas DataFrame'e çevir</li>
+<li>XlsxWriter ile Excel oluştur</li>
+<li>HTTP response olarak stream et</li>
+</ul>
+<h2>🔄 İş Akışları ve Süreçler</h2>
+<h3>Geliştirici İş Akışı (Developer Workflow)</h3>
+<h4>1. Proje Başlatma</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Sanal ortam oluşturma (önerilir)</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate<span class="w">  </span><span class="c1"># Windows</span>
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># Linux/Mac</span>
+
+<span class="c1"># Bağımlılıkları kurma</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w">  </span><span class="c1"># Eğer varsa</span>
+
+<span class="c1"># Veritabanını hazırlama</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>migrate
+
+<span class="c1"># Admin kullanıcısı oluşturma</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>createsuperuser
+
+<span class="c1"># Sunucuyu başlatma</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>runserver
+</code></pre></div>
+
+<h4>2. Geliştirme Döngüsü</h4>
+<ol>
+<li><strong>Model değişiklikleri</strong>: <code>models.py</code> düzenle</li>
+<li><strong>Migrasyon oluştur</strong>: <code>python manage.py makemigrations</code></li>
+<li><strong>Migrasyonu uygula</strong>: <code>python manage.py migrate</code></li>
+<li><strong>View'ları test et</strong>: Tarayıcıda <code>/api/</code> kontrol et</li>
+<li><strong>Admin panelinde veri kontrol</strong>: <code>/admin/</code> ziyaret et</li>
+</ol>
+<h4>3. Debug ve Geliştirme</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Debug modunda çalıştırma</span>
+<span class="nv">DEBUG</span><span class="o">=</span>True<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>runserver
+
+<span class="c1"># Django shell ile veri kontrolü</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>shell
+&gt;&gt;&gt;<span class="w"> </span>from<span class="w"> </span>data_generator.models<span class="w"> </span>import<span class="w"> </span>ForecastData
+&gt;&gt;&gt;<span class="w"> </span>ForecastData.objects.count<span class="o">()</span>
+
+<span class="c1"># Log dosyalarını kontrol etme</span>
+<span class="c1"># (Şu anda aktif değil, eklenebilir)</span>
+</code></pre></div>
+
+<h3>Son Kullanıcı İş Akışı (End User Workflow)</h3>
+<h4>1. Dashboard Kullanımı</h4>
+<ol>
+<li><strong>Erişim</strong>: <code>http://localhost:8000/api/</code> adresine git</li>
+<li><strong>Veri Görüntüleme</strong>: Mevcut tahmin verilerini tabloda gör</li>
+<li><strong>Yeni Veri</strong>: "Generate New Data" butonuna tıkla</li>
+<li><strong>İndirme</strong>: "Download as Excel" ile verileri indir</li>
+</ol>
+<h4>2. Veri Yönetimi Süreci</h4>
+<ol>
+<li><strong>Veri Üretimi</strong>: GET <code>/api/generate-forecast/</code></li>
+<li>Eski veriler silinir</li>
+<li>100 yeni kayıt oluşturulur</li>
+<li>Dashboard'a otomatik yönlendirme</li>
+<li><strong>Veri İndirme</strong>: GET <code>/api/download-forecast/</code></li>
+<li>Tüm veriler Excel formatında</li>
+<li>Tarayıcı otomatik indirme başlatır</li>
+</ol>
+<h2>🎨 Frontend ve Template Yapısı</h2>
+<h3>Dashboard Template Özellikleri</h3>
+<ul>
+<li><strong>Lokasyon</strong>: <code>data_generator/templates/data_generator/forecast_dashboard.html</code></li>
+<li><strong>Stil</strong>: Inline CSS (harici dosya yok)</li>
+<li><strong>Responsive</strong>: Temel responsive tasarım</li>
+<li><strong>Bileşenler</strong>:</li>
+<li>Başlık bölümü</li>
+<li>Buton kontrolleri</li>
+<li>Veri tablosu</li>
+<li>Boş durum mesajı</li>
+</ul>
+<h3>Template Context Verileri</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;forecasts&#39;</span><span class="p">:</span> <span class="n">ForecastData</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-forecast_date&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>CSS Stil Özellikleri</h3>
+<ul>
+<li><strong>Tablo</strong>: Border-collapse, padding, hover efektleri</li>
+<li><strong>Butonlar</strong>: Yeşil (Generate) ve Mavi (Download) renk şeması</li>
+<li><strong>Responsive</strong>: Temel responsive design</li>
+<li><strong>Typography</strong>: Sans-serif font ailesi</li>
+</ul>
+<h2>🔐 Güvenlik ve Konfigürasyon</h2>
+<h3>Settings.py Kritik Ayarları</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># GÜVENLİK UYARISI: Production&#39;da değiştirilmeli</span>
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;django-insecure-#_r7w!sdq2_px-y=m8+5qolpx(kj0))ehl*b1t7)9x9zl(-apm&#39;</span>
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Production&#39;da False yapılmalı</span>
+<span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Production&#39;da domain ekle</span>
+
+<span class="c1"># Uygulamalar</span>
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.messages&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;rest_framework&#39;</span><span class="p">,</span>           <span class="c1"># DRF</span>
+    <span class="s1">&#39;data_generator&#39;</span><span class="p">,</span>           <span class="c1"># Ana uygulama</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<h3>Güvenlik Önerileri</h3>
+<ul>
+<li><strong>SECRET_KEY</strong>: Production'da environment variable kullan</li>
+<li><strong>DEBUG</strong>: Production'da False yap</li>
+<li><strong>ALLOWED_HOSTS</strong>: Sadece izin verilen domain'leri ekle</li>
+<li><strong>CSRF Protection</strong>: Aktif (POST işlemleri için gerekli)</li>
+</ul>
+<h2>🧪 Test Stratejisi ve Kalite Kontrolü</h2>
+<h3>Mevcut Test Durumu</h3>
+<ul>
+<li><strong>Test Dosyası</strong>: <code>data_generator/tests.py</code> (boş)</li>
+<li><strong>Test Coverage</strong>: %0 (testler yazılmamış)</li>
+<li><strong>Test Framework</strong>: Django TestCase (hazır)</li>
+</ul>
+<h3>Önerilen Test Senaryoları</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># data_generator/tests.py (örnek)</span>
+<span class="k">class</span> <span class="nc">ForecastDataTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test_model_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Model oluşturma testi</span>
+
+    <span class="k">def</span> <span class="nf">test_generate_forecast_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Veri üretimi endpoint testi</span>
+
+    <span class="k">def</span> <span class="nf">test_download_excel_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Excel indirme testi</span>
+
+    <span class="k">def</span> <span class="nf">test_dashboard_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Dashboard render testi</span>
+</code></pre></div>
+
+<h3>Test Çalıştırma</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Tüm testleri çalıştır</span>
+python<span class="w"> </span>manage.py<span class="w"> </span><span class="nb">test</span>
+
+<span class="c1"># Belirli app testleri</span>
+python<span class="w"> </span>manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>data_generator
+
+<span class="c1"># Verbose output ile</span>
+python<span class="w"> </span>manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--verbosity<span class="o">=</span><span class="m">2</span>
+</code></pre></div>
+
+<h2>🚀 Production ve Deployment</h2>
+<h3>Production Hazırlık Listesi</h3>
+<ol>
+<li><strong>Settings ayarları</strong>:</li>
+<li><code>DEBUG = False</code></li>
+<li><code>SECRET_KEY</code> environment variable</li>
+<li><code>ALLOWED_HOSTS</code> konfigürasyonu</li>
+<li><strong>Veritabanı</strong>: SQLite → PostgreSQL/MySQL</li>
+<li><strong>Static dosyalar</strong>: <code>python manage.py collectstatic</code></li>
+<li><strong>Güvenlik</strong>: HTTPS, CSRF, SQL Injection koruması</li>
+<li><strong>Monitoring</strong>: Logging, error tracking</li>
+</ol>
+<h3>Önerilen Deployment Stack</h3>
+<ul>
+<li><strong>Web Server</strong>: Nginx + Gunicorn</li>
+<li><strong>Database</strong>: PostgreSQL</li>
+<li><strong>Caching</strong>: Redis</li>
+<li><strong>Monitoring</strong>: Sentry, New Relic</li>
+</ul>
+<h2>📈 Performans ve Optimizasyon</h2>
+<h3>Mevcut Performans Karakteristikleri</h3>
+<ul>
+<li><strong>Veri Yükleme</strong>: 100 kayıt batch insert</li>
+<li><strong>Excel Üretimi</strong>: Pandas + XlsxWriter (bellek tabanlı)</li>
+<li><strong>Database Queries</strong>: N+1 problemi yok (tek sorgu ile veriler)</li>
+</ul>
+<h3>Optimizasyon Önerileri</h3>
+<ol>
+<li><strong>Database İndeksleme</strong>: <code>forecast_date</code> alanına index</li>
+<li><strong>Caching</strong>: Django cache framework kullanımı</li>
+<li><strong>Pagination</strong>: Büyük veri setleri için sayfalama</li>
+<li><strong>Background Tasks</strong>: Celery ile asenkron işlemler</li>
+</ol>
+<h2>🔧 Geliştirme İpuçları ve Best Practices</h2>
+<h3>Kod Konvansiyonları</h3>
+<ul>
+<li><strong>URL patterns</strong>: Kebab-case (<code>generate-forecast</code>)</li>
+<li><strong>View names</strong>: PascalCase + View suffix (<code>GenerateForecastView</code>)</li>
+<li><strong>Model fields</strong>: Snake_case (<code>product_name</code>)</li>
+<li><strong>Template names</strong>: App_name/template_name.html</li>
+</ul>
+<h3>Yaygın Geliştirme Görevleri</h3>
+<h4>Yeni Endpoint Ekleme</h4>
+<ol>
+<li><code>data_generator/views.py</code>'ye view ekle</li>
+<li><code>data_generator/urls.py</code>'ye URL pattern ekle</li>
+<li>Template gerekiyorsa <code>templates/</code> altına ekle</li>
+<li>Serializer gerekiyorsa <code>serializers.py</code>'ye ekle</li>
+</ol>
+<h4>Model Değişiklikleri</h4>
+<ol>
+<li><code>models.py</code>'yi düzenle</li>
+<li><code>python manage.py makemigrations</code></li>
+<li>Migrasyon dosyasını kontrol et</li>
+<li><code>python manage.py migrate</code></li>
+<li><code>admin.py</code>'yi güncelle (gerekiyorsa)</li>
+</ol>
+<h4>API Endpoint Test Etme</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># cURL ile test</span>
+curl<span class="w"> </span>http://localhost:8000/api/generate-forecast/
+curl<span class="w"> </span>http://localhost:8000/api/download-forecast/<span class="w"> </span>-o<span class="w"> </span>test.xlsx
+
+<span class="c1"># Browser&#39;da test</span>
+http://localhost:8000/api/
+</code></pre></div>
+
+<h2>🐛 Yaygın Sorunlar ve Çözümleri</h2>
+<h3>Database İssues</h3>
+<ul>
+<li><strong>Migrasyon hatası</strong>: <code>python manage.py migrate --fake-initial</code></li>
+<li><strong>Sqlite locked</strong>: Sunucuyu kapatıp tekrar başlat</li>
+</ul>
+<h3>Import Errors</h3>
+<ul>
+<li><strong>ModuleNotFoundError</strong>: Virtual environment aktif mi kontrol et</li>
+<li><strong>App not found</strong>: <code>INSTALLED_APPS</code>'e eklenmiş mi kontrol et</li>
+</ul>
+<h3>Template Not Found</h3>
+<ul>
+<li><strong>Template path</strong>: App adı/template adı yapısını kontrol et</li>
+<li><strong>Template dirs</strong>: <code>settings.py</code>'de TEMPLATES ayarını kontrol et</li>
+</ul>
+<hr />
+<p>Bu kılavuz, DjangoApiApp projesinde etkili çalışabilmek için gereken tüm bilgileri içermektedir. Herhangi bir belirsizlik veya eksik bilgi için geliştirici ekibiyle iletişime geçin.</p>
+    
+    <div style="margin-top: 40px; text-align: center; color: #666; font-size: 12px;">
+        <p>Bu belgeyi PDF olarak kaydetmek için tarayıcınızda <strong>Ctrl+P</strong> tuşlarına basın ve "PDF olarak kaydet" seçeneğini seçin.</p>
+    </div>
+</body>
+</html>

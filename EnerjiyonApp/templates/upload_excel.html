@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Excel Dosyası Yükle - Forecast Models{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4>📁 Excel Dosyası Yükle</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-4">
+                    Enerji piyasası verilerinizi içeren Excel dosyasını yükleyin. 
+                    Dosya şu sütunları içermelidir: Tarih, Saat, PTF, SMF, Pozitif Dengesizlik Fiyatı, Negatif Dengesizlik Fiyatı, SMF Yön
+                </p>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.excel_file.id_for_label }}" class="form-label">
+                            {{ form.excel_file.label }}
+                        </label>
+                        {{ form.excel_file }}
+                        {% if form.excel_file.help_text %}
+                            <div class="form-text">{{ form.excel_file.help_text }}</div>
+                        {% endif %}
+                        {% if form.excel_file.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.excel_file.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            📤 Dosyayı Yükle
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-secondary">
+                            ⬅️ Ana Sayfaya Dön
+                        </a>
+                    </div>
+                </form>
+
+                <div class="mt-4">
+                    <h6>📋 Excel Dosyası Format Örneği:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Saat</th>
+                                    <th>PTF</th>
+                                    <th>SMF</th>
+                                    <th>Pozitif Dengesizlik Fiyatı (TL/MWh)</th>
+                                    <th>Negatif Dengesizlik Fiyatı (TL/MWh)</th>
+                                    <th>SMF Yön</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2024-01-01</td>
+                                    <td>00:00</td>
+                                    <td>450,25</td>
+                                    <td>455,30</td>
+                                    <td>500,15</td>
+                                    <td>400,45</td>
+                                    <td>Enerji Açığı</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-01-01</td>
+                                    <td>01:00</td>
+                                    <td>435,80</td>
+                                    <td>430,50</td>
+                                    <td>480,20</td>
+                                    <td>385,90</td>
+                                    <td>Enerji Fazlası</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

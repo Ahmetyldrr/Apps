@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Veri Analizi - Forecast Models{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">📊 Veri Analizi</h1>
+    </div>
+</div>
+
+<!-- İstatistikler -->
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Toplam</h5>
+                <h3>{{ stats.count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Ortalama</h5>
+                <h3>{{ stats.mean|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Std. Sapma</h5>
+                <h3>{{ stats.std|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Minimum</h5>
+                <h3>{{ stats.min|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Maksimum</h5>
+                <h3>{{ stats.max|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Tarih Aralığı</h5>
+                <small>{{ stats.first_date }} - {{ stats.last_date }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grafik -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>📈 Zaman Serisi Grafiği</h5>
+            </div>
+            <div class="card-body">
+                {% if chart_data %}
+                    <img src="data:image/png;base64,{{ chart_data }}" class="img-fluid" alt="Zaman Serisi Grafiği">
+                {% else %}
+                    <p class="text-muted">Grafik oluşturulamadı.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Analizi -->
+{% if ai_analysis.status == 'success' %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="ai-analysis">
+            <h5>🧠 AI Veri Analizi</h5>
+            <p>{{ ai_analysis.analysis|linebreaks }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Veri Tablosu -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>📋 Veri Tablosu</h5>
+                <a href="{% url 'forecast_models' %}" class="btn btn-primary btn-sm">
+                    🤖 Tahmin Modelleri
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Gerçek Değer</th>
+                                <th>Tahmin</th>
+                                <th>Hata</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in data %}
+                                <tr>
+                                    <td>{{ item.date }}</td>
+                                    <td>{{ item.actual_value|floatformat:2 }}</td>
+                                    <td>
+                                        {% if item.predicted_value %}
+                                            {{ item.predicted_value|floatformat:2 }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if item.error %}
+                                            {{ item.error|floatformat:2 }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

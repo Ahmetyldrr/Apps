@@ -1,0 +1,15 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}Payment Successful{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <div class="alert alert-success mt-4" role="alert">
+        <h4 class="alert-heading">Ödeme Gerçekleşti!</h4>
+        <p>Siparişiniz başarıyla alınmıştır. Alışverişe devam ettiğiniz için teşekkür ederiz.</p>
+        <hr>
+        <a href="{% url 'product_list' %}" class="btn btn-primary">Alışverişe Devam Et</a>
+    </div>
+</div>
+{% endblock %}

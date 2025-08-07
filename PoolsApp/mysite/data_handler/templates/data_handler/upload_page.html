@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Anket Yükle - Anket Uygulaması{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Upload Polls from Excel</h2>
+    <p>Download the template to see the required format. Fill it out and upload it here to add new polls to the database.</p>
+    
+    <div class="mb-3">
+        <a href="{% url 'data_handler:download_template' %}" class="btn btn-success">Download Excel Template</a>
+    </div>
+
+    <hr>
+
+    <form method="post" enctype="multipart/form-data" action="{% url 'data_handler:upload_polls' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="excel_file" class="form-label">Upload your filled Excel file:</label>
+            <input class="form-control" type="file" name="excel_file" id="excel_file" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload and Process</button>
+    </form>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} mt-3" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

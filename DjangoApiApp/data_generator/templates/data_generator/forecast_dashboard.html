@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forecast Dashboard</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .button-container { margin-bottom: 1em; }
+        .button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        .download-button { background-color: #008CBA; } /* Blue */
+    </style>
+</head>
+<body>
+
+    <h1>Forecast Data Dashboard</h1>
+
+    <div class="button-container">
+        <a href="{% url 'generate-forecast' %}" class="button">Generate New Data</a>
+        <a href="{% url 'download-forecast' %}" class="button download-button">Download as Excel</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Forecast Date</th>
+                <th>Sales Forecast</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for forecast in forecasts %}
+            <tr>
+                <td>{{ forecast.product_name }}</td>
+                <td>{{ forecast.forecast_date }}</td>
+                <td>{{ forecast.sales_forecast }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No forecast data available. Click "Generate New Data" to create some.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

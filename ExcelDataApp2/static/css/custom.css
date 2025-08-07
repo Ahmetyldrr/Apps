@@ -1,0 +1,31 @@
+.navbar {
+    background-color: #183059 !important; /* Koyu mavi */
+    margin-bottom: 50px;
+    box-shadow: 0 2px 8px rgba(24,48,89,0.15);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.navbar-brand:hover {
+    color: #fff700;
+}
+
+.navbar-nav > li > a,
+.navbar-nav .nav-link {
+    color: #e3eafc !important;
+}
+
+.navbar-nav > li > a:hover,
+.navbar-nav .nav-link:hover {
+    color: #ffd700 !important;
+}
+
+.navbar-nav > li.active > a {
+    color: #ffd700 !important;
+    background-color: transparent;
+}
+
+

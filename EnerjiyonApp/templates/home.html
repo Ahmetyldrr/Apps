@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Forecast Models Dashboard</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Son Veriler</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_data %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Gerçek Değer</th>
+                                    <th>Tahmin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in recent_data %}
+                                <tr>
+                                    <td>{{ data.date }}</td>
+                                    <td>{{ data.actual_value|floatformat:2 }}</td>
+                                    <td>
+                                        {% if data.predicted_value %}
+                                            {{ data.predicted_value|floatformat:2 }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Henüz veri yüklenmemiş.</p>
+                    <a href="{% url 'upload_excel' %}" class="btn btn-primary">Veri Yükle</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Model Performansları</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_performance %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>R² Score</th>
+                                    <th>MAE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for perf in recent_performance %}
+                                <tr>
+                                    <td>{{ perf.get_model_name_display }}</td>
+                                    <td>{{ perf.r2_score|floatformat:3 }}</td>
+                                    <td>{{ perf.mae|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Henüz model çalıştırılmamış.</p>
+                    <a href="{% url 'forecast_models' %}" class="btn btn-success">Model Çalıştır</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3>Hızlı Başlangıç</h3>
+                <p class="text-muted">Excel dosyanızı yükleyerek tahmin modellerini çalıştırmaya başlayın.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <a href="{% url 'upload_excel' %}" class="btn btn-primary">📁 Veri Yükle</a>
+                    <a href="{% url 'data_analysis' %}" class="btn btn-info">📊 Analiz Et</a>
+                    <a href="{% url 'forecast_models' %}" class="btn btn-success">🤖 Model Çalıştır</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

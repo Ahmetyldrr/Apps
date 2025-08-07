@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}SMF Yön Tahmini - Forecast Models{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">🤖 SMF Yön Tahmini</h1>
+    </div>
+</div>
+
+{% if results.error %}
+    <div class="alert alert-danger">
+        <h5>❌ Hata</h5>
+        <p>{{ results.error }}</p>
+        <a href="{% url 'energy_analysis' %}" class="btn btn-primary">⬅️ Analiz Sayfasına Dön</a>
+    </div>
+{% else %}
+    <!-- Model Performansları -->
+    <div class="row mb-4">
+        {% for model_key, model_data in results.items %}
+            {% if model_key != 'future_prediction' %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>📊 {{ model_data.name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h3 class="text-primary">{{ model_data.accuracy|floatformat:3 }}</h3>
+                                        <p class="text-muted">Doğruluk Oranı</p>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    {% if model_data.feature_importance %}
+                                        <h6>🎯 En Önemli Özellikler:</h6>
+                                        <ul class="list-unstyled">
+                                            {% for feature, importance in model_data.feature_importance.items %}
+                                                {% if forloop.counter <= 3 %}
+                                                    <li><small>{{ feature }}: {{ importance|floatformat:3 }}</small></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Gelecek Tahmin -->
+    {% if results.future_prediction %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white">
+                        <h5>🔮 Sonraki SMF Yön Tahmini</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3>
+                                    {% if results.future_prediction.predicted_direction == 'enerji_acigi' %}
+                                        <span class="badge bg-danger fs-4">🔴 Enerji Açığı</span>
+                                    {% elif results.future_prediction.predicted_direction == 'enerji_fazlasi' %}
+                                        <span class="badge bg-success fs-4">🟢 Enerji Fazlası</span>
+                                    {% else %}
+                                        <span class="badge bg-warning fs-4">🟡 Dengede</span>
+                                    {% endif %}
+                                </h3>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>{{ results.future_prediction.confidence|floatformat:2 }}%</h4>
+                                <p class="text-muted">Güvenilirlik</p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>{{ results.future_prediction.model_used|title }}</h6>
+                                <p class="text-muted">Kullanılan Model</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- AI Değerlendirmesi -->
+    {% if ai_evaluation.status == 'success' %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="ai-analysis">
+                    <h5>🧠 AI Model Değerlendirmesi</h5>
+                    <p>{{ ai_evaluation.evaluation|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Basitleştirilmiş Model Performansı -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>📈 Model Performans Karşılaştırması</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Doğruluk Oranı</th>
+                                    <th>En İyi Sınıf</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for model_key, model_data in results.items %}
+                                    {% if model_key != 'future_prediction' %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ model_data.name }}</strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary">{{ model_data.accuracy|floatformat:3 }}</span>
+                                            </td>
+                                            <td>
+                                                {% if model_data.classification_report %}
+                                                    <small class="text-muted">Detaylı rapor mevcut</small>
+                                                {% else %}
+                                                    <small class="text-muted">-</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if model_data.accuracy > 0.7 %}
+                                                    <span class="badge bg-success">İyi</span>
+                                                {% elif model_data.accuracy > 0.5 %}
+                                                    <span class="badge bg-warning">Orta</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Zayıf</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <h6>📋 Performans Notları:</h6>
+                        <ul class="list-unstyled">
+                            <li>🟢 <strong>İyi</strong>: %70+ doğruluk oranı</li>
+                            <li>🟡 <strong>Orta</strong>: %50-70 doğruluk oranı</li>
+                            <li>🔴 <strong>Zayıf</strong>: %50 altı doğruluk oranı</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <a href="{% url 'energy_analysis' %}" class="btn btn-primary">
+            ⬅️ Enerji Analizi
+        </a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            🏠 Ana Sayfa
+        </a>
+    </div>
+</div>
+{% endblock %}
