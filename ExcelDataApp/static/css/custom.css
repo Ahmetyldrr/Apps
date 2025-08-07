@@ -1,0 +1,30 @@
+body {
+    background-color: hsl(0, 3%, 93%);
+}
+.navbar {
+    margin-bottom: 50px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: hsla(57, 91%, 68%, 0.795);
+}
+
+.navbar-brand:hover {
+    color: rgb(181, 248, 99);
+}
+
+.navbar-nav > li > a {
+    color: hsla(60, 35%, 94%, 0.795);
+}
+
+.navbar-nav > li > a:hover {
+    color: rgb(181, 248, 99);
+}
+.navbar-nav > li.active > a {
+    color: rgb(181, 248, 99);
+    background-color: transparent;
+}
+
+
+

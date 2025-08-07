@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Detail{% endblock %}
+{% block content %}
+    <div class="mt-4">
+        <h1>Detay Sayfası</h1>
+        <p>Burada detaylar yer alacak.</p>
+        <div class="mt-3">
+            <h5>Dosya Yükle</h5>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="excel_file" accept=".xlsx,.xls" class="form-control mb-2">
+                <button type="submit" class="btn btn-success">Yükle</button>
+            </form>
+        </div>
+        <div class="mt-3">
+            <h5>Yüklenen Dosyalar</h5>
+            <ul>
+                {% for file in file_urls %}
+                <li>
+                    <a href="{{ file.url }}" download>{{ file.name }}</a>
+                </li>
+                {% empty %}
+                <li>Henüz dosya yüklenmedi.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
