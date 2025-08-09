@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelişmiş Arama - Çoklu Tablo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .search-header { text-align: center; margin-bottom: 30px; background: white; padding: 20px; border-radius: 10px; }
+        .results-section { background: white; margin-bottom: 20px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .results-section h3 { color: #495057; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px; }
+        
+        /* Sonuç kartları */
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .result-card { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 8px; }
+        .result-card h4 { margin: 0 0 10px 0; color: #343a40; }
+        .result-card p { margin: 5px 0; font-size: 0.9em; color: #6c757d; }
+        .highlight { background-color: #fff3cd; padding: 2px 4px; border-radius: 3px; }
+        
+        /* Filtre bilgileri */
+        .filter-info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .filter-info h4 { margin: 0 0 10px 0; color: #1565c0; }
+        
+        /* İstatistik kutuları */
+        .stats-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 1.8em; font-weight: bold; display: block; }
+        .stat-label { font-size: 0.9em; }
+        
+        /* Boş sonuç */
+        .no-results { text-align: center; color: #6c757d; padding: 40px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-header">
+            <h1>🔍 Gelişmiş Arama Sonuçları</h1>
+            <p>5 farklı tablodan entegre arama sonuçları</p>
+        </div>
+
+        <!-- Arama kriterleri bilgisi -->
+        <div class="filter-info">
+            <h4>🎯 Arama Kriterleri</h4>
+            <p><strong>Kullanılan Tablolar:</strong> League, Team, Match, Player, TeamStats</p>
+            <p><strong>Arama Türü:</strong> Çoklu tablo entegre araması</p>
+            <p><strong>Sıralama:</strong> İlişkisel verilere göre optimize edilmiş</p>
+        </div>
+
+        <!-- Özet istatistikler -->
+        <div class="stats-summary">
+            <div class="stat-box">
+                <span class="stat-number">{{ matching_teams.count }}</span>
+                <span class="stat-label">Eşleşen Takım</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">{{ matching_players.count }}</span>
+                <span class="stat-label">Eşleşen Oyuncu</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">{{ matching_matches.count }}</span>
+                <span class="stat-label">Eşleşen Maç</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">{{ matching_leagues.count }}</span>
+                <span class="stat-label">Eşleşen Lig</span>
+            </div>
+        </div>
+
+        <!-- BÖLÜM 1: TAKIMLAR (Team + League + TeamStats tabloları) -->
+        <div class="results-section">
+            <h3>⚽ Bulunan Takımlar ({{ matching_teams.count }})</h3>
+            <div class="results-grid">
+                {% for team in matching_teams %}
+                <div class="result-card">
+                    <h4>{{ team.name }}</h4>
+                    <p><strong>Lig:</strong> {{ team.league.name }} ({{ team.league.country }})</p>
+                    <p><strong>Şehir:</strong> {{ team.city }}</p>
+                    <p><strong>Kuruluş:</strong> {{ team.founded_year|default:"Bilinmiyor" }}</p>
+                    
+                    <!-- TeamStats tablosundan gelen istatistikler -->
+                    {% if team.teamstats_set.first %}
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+                        <p><strong>İstatistikler:</strong></p>
+                        {% with stats=team.teamstats_set.first %}
+                        <p>🏆 {{ stats.wins }}G {{ stats.draws }}B {{ stats.losses }}M</p>
+                        <p>⚽ {{ stats.goals_for }}-{{ stats.goals_against }} ({{ stats.goal_difference|floatformat:0 }})</p>
+                        {% endwith %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="no-results">
+                    <p>Arama kriterlerinize uygun takım bulunamadı.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- BÖLÜM 2: OYUNCULAR (Player + Team tabloları) -->
+        <div class="results-section">
+            <h3>👤 Bulunan Oyuncular ({{ matching_players.count }})</h3>
+            <div class="results-grid">
+                {% for player in matching_players %}
+                <div class="result-card">
+                    <h4>{{ player.name }} {{ player.surname }}</h4>
+                    <p><strong>Takım:</strong> {{ player.team.name }}</p>
+                    <p><strong>Lig:</strong> {{ player.team.league.name }}</p>
+                    <p><strong>Pozisyon:</strong> {{ player.position }}</p>
+                    <p><strong>Yaş:</strong> {{ player.age }} yaşında</p>
+                    {% if player.salary %}
+                    <p><strong>Maaş:</strong> ${{ player.salary|floatformat:0 }}</p>
+                    {% endif %}
+                    <p><strong>Takım Şehri:</strong> {{ player.team.city }}</p>
+                </div>
+                {% empty %}
+                <div class="no-results">
+                    <p>Arama kriterlerinize uygun oyuncu bulunamadı.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- BÖLÜM 3: MAÇLAR (Match + Team + League tabloları) -->
+        <div class="results-section">
+            <h3>🏁 Bulunan Maçlar ({{ matching_matches.count }})</h3>
+            <div class="results-grid">
+                {% for match in matching_matches %}
+                <div class="result-card">
+                    <h4>{{ match.home_team.name }} vs {{ match.away_team.name }}</h4>
+                    <p><strong>Tarih:</strong> {{ match.date|date:"d M Y H:i" }}</p>
+                    <p><strong>Lig:</strong> {{ match.league.name }}</p>
+                    
+                    {% if match.home_score is not None %}
+                        <p><strong>Skor:</strong> <span class="highlight">{{ match.home_score }} - {{ match.away_score }}</span></p>
+                        <p><strong>Durum:</strong> Tamamlandı</p>
+                    {% else %}
+                        <p><strong>Durum:</strong> Henüz oynanmadı</p>
+                    {% endif %}
+                    
+                    <p><strong>Stadyum:</strong> {{ match.venue|default:"Belirtilmemiş" }}</p>
+                    <p><strong>Ev Sahibi Şehir:</strong> {{ match.home_team.city }}</p>
+                </div>
+                {% empty %}
+                <div class="no-results">
+                    <p>Arama kriterlerinize uygun maç bulunamadı.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- BÖLÜM 4: LİGLER (League tablosu) -->
+        <div class="results-section">
+            <h3>🏆 Bulunan Ligler ({{ matching_leagues.count }})</h3>
+            <div class="results-grid">
+                {% for league in matching_leagues %}
+                <div class="result-card">
+                    <h4>{{ league.name }}</h4>
+                    <p><strong>Ülke:</strong> {{ league.country }}</p>
+                    <p><strong>Sezon:</strong> {{ league.season|default:"Güncel" }}</p>
+                    
+                    <!-- Bu ligdeki takım sayısı (ilişkisel sorgu) -->
+                    <p><strong>Takım Sayısı:</strong> {{ league.team_set.count }}</p>
+                    
+                    <!-- Bu ligdeki toplam maç sayısı (ilişkisel sorgu) -->
+                    <p><strong>Toplam Maç:</strong> {{ league.match_set.count }}</p>
+                </div>
+                {% empty %}
+                <div class="no-results">
+                    <p>Arama kriterlerinize uygun lig bulunamadı.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- BÖLÜM 5: İLİŞKİSEL ANALİZ -->
+        <div class="results-section">
+            <h3>📊 İlişkisel Veri Analizi</h3>
+            <div class="results-grid">
+                <div class="result-card">
+                    <h4>🔗 Tablo İlişkileri</h4>
+                    <p><strong>Toplam Lig:</strong> {{ matching_leagues.count }}</p>
+                    <p><strong>Bu Liglerdeki Takımlar:</strong> 
+                        {% for league in matching_leagues %}
+                            {{ league.team_set.count }}
+                            {% if not forloop.last %} + {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><strong>İstatistik Kaydı Olan Takımlar:</strong> 
+                        {{ matching_teams|length }}
+                    </p>
+                </div>
+                
+                <div class="result-card">
+                    <h4>⚽ Oyuncu Dağılımı</h4>
+                    {% for team in matching_teams|slice:":5" %}
+                    <p><strong>{{ team.name }}:</strong> {{ team.player_set.count }} oyuncu</p>
+                    {% endfor %}
+                    {% if matching_teams.count > 5 %}
+                    <p><em>... ve {{ matching_teams.count|add:"-5" }} takım daha</em></p>
+                    {% endif %}
+                </div>
+                
+                <div class="result-card">
+                    <h4>🏆 Maç İstatistikleri</h4>
+                    <p><strong>Tamamlanan Maçlar:</strong> 
+                        {{ matching_matches|length }}
+                    </p>
+                    <p><strong>Gelecek Maçlar:</strong> 
+                        Yaklaşan tarihlerde
+                    </p>
+                    <p><strong>Farklı Stadyumlar:</strong> 
+                        {% regroup matching_matches by venue as venue_list %}
+                        {{ venue_list|length }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVİGASYON -->
+        <div class="results-section">
+            <h3>🔗 Diğer Sayfalar</h3>
+            <p><a href="/">🏠 Ana Sayfa</a> - Temel çoklu tablo görünümü</p>
+            <p><a href="/dashboard/">📈 Dashboard</a> - Kapsamlı analitik veriler</p>
+            <p><a href="/admin/">⚙️ Yönetim</a> - Veri düzenleme</p>
+        </div>
+
+        <!-- TEKNİK BİLGİLER -->
+        <div class="results-section" style="background: #f8f9fa; border: 1px dashed #6c757d;">
+            <h3>🛠️ Teknik Detaylar</h3>
+            <p><strong>Bu sayfa aşağıdaki Django özelliklerini gösteriyor:</strong></p>
+            <ul>
+                <li><strong>select_related():</strong> Team-League, Player-Team ilişkileri tek sorguda</li>
+                <li><strong>prefetch_related():</strong> Ters ilişkiler (team.player_set) optimize edildi</li>
+                <li><strong>Annotations:</strong> İstatistiksel hesaplamalar sorgu seviyesinde</li>
+                <li><strong>Q Objects:</strong> Kompleks arama filtreleri</li>
+                <li><strong>Template Filters:</strong> Veri formatlama ve sunum</li>
+                <li><strong>HTML Sections:</strong> Her tablo verisi ayrı bölümde organize edildi</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>

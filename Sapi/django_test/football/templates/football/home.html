@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa - Futbol Uygulaması</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .section { background: white; margin-bottom: 20px; padding: 25px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .section h2 { color: #2c3e50; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #3498db; }
+        
+        /* Son Maçlar Bölümü */
+        .recent-matches { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .match-item { background: #ecf0f1; padding: 15px; border-radius: 8px; border-left: 4px solid #e74c3c; }
+        .match-score { font-size: 1.2em; font-weight: bold; color: #c0392b; }
+        
+        /* Ligler Bölümü */
+        .leagues-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .league-badge { background: #3498db; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9em; }
+        
+        /* Takımlar Bölümü */  
+        .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .team-card { background: #fff; border: 1px solid #bdc3c7; padding: 15px; border-radius: 8px; text-align: center; }
+        .team-name { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        
+        /* İstatistikler Kısmı */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+        .stat-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; display: block; }
+        .stat-label { font-size: 0.9em; opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚽ Futbol Merkezi</h1>
+            <p>Çoklu tablo verilerinden oluşan kapsamlı futbol bilgi sistemi</p>
+        </div>
+
+        <!-- 1. SON OYNANAN MAÇLAR BÖLÜMÜ (Match + Team + League tabloları) -->
+        <div class="section">
+            <h2>🏁 Son Oynanan Maçlar</h2>
+            <div class="recent-matches">
+                {% for match in recent_matches %}
+                <div class="match-item">
+                    <div class="match-score">
+                        {{ match.home_team.name }} {{ match.home_score }} - {{ match.away_score }} {{ match.away_team.name }}
+                    </div>
+                    <p><strong>Lig:</strong> {{ match.league.name }}</p>
+                    <p><strong>Tarih:</strong> {{ match.date|date:"d F Y" }}</p>
+                    <p><strong>Stadyum:</strong> {{ match.venue|default:"Belirtilmemiş" }}</p>
+                </div>
+                {% empty %}
+                <p>Henüz maç kaydı bulunmuyor.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 2. AKTİF LİGLER BÖLÜMÜ (League tablosu) -->
+        <div class="section">
+            <h2>🏆 Aktif Ligler</h2>
+            <div class="leagues-list">
+                {% for league in leagues %}
+                <span class="league-badge">{{ league.name }} ({{ league.country }})</span>
+                {% empty %}
+                <p>Lig bilgisi bulunmuyor.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 3. TAKIMLAR BÖLÜMÜ (Team + League tabloları) -->
+        <div class="section">
+            <h2>⚽ Takımlar</h2>
+            <div class="teams-grid">
+                {% for team in teams %}
+                <div class="team-card">
+                    <div class="team-name">{{ team.name }}</div>
+                    <p><strong>Şehir:</strong> {{ team.city }}</p>
+                    <p><strong>Lig:</strong> {{ team.league.name }}</p>
+                    <p><strong>Kuruluş:</strong> {{ team.founded_year|default:"Bilinmiyor" }}</p>
+                </div>
+                {% empty %}
+                <p>Takım bilgisi bulunmuyor.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 4. ÖNE ÇIKAN OYUNCULAR BÖLÜMÜ (Player + Team tabloları) -->
+        <div class="section">
+            <h2>⭐ Öne Çıkan Oyuncular</h2>
+            <div class="teams-grid">
+                {% for player in featured_players %}
+                <div class="team-card">
+                    <div class="team-name">{{ player.name }} {{ player.surname }}</div>
+                    <p><strong>Takım:</strong> {{ player.team.name }}</p>
+                    <p><strong>Pozisyon:</strong> {{ player.position }}</p>
+                    <p><strong>Yaş:</strong> {{ player.age }} yaşında</p>
+                    {% if player.salary %}
+                    <p><strong>Maaş:</strong> ${{ player.salary|floatformat:0 }}</p>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p>Oyuncu bilgisi bulunmuyor.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 5. SİSTEM İSTATİSTİKLERİ (Tüm tablolardan sayısal veriler) -->
+        <div class="section">
+            <h2>📊 Sistem İstatistikleri</h2>
+            <div class="stats-row">
+                <div class="stat-box">
+                    <span class="stat-number">{{ total_leagues }}</span>
+                    <span class="stat-label">Toplam Lig</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">{{ total_teams }}</span>
+                    <span class="stat-label">Toplam Takım</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">{{ total_matches }}</span>
+                    <span class="stat-label">Toplam Maç</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">{{ total_players }}</span>
+                    <span class="stat-label">Toplam Oyuncu</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. HIZLI ERİŞİM LİNKLERİ -->
+        <div class="section">
+            <h2>🔗 Hızlı Erişim</h2>
+            <p><a href="/dashboard/">📈 Detaylı Dashboard'a Git</a> - Tüm tablolardan gelen kapsamlı analiz</p>
+            <p><a href="/search/">🔍 Gelişmiş Arama</a> - Çoklu tablo araması</p>
+            <p><a href="/admin/">⚙️ Yönetim Paneli</a> - Veri yönetimi</p>
+        </div>
+
+        <!-- 7. SİSTEM BİLGİSİ -->
+        <div class="section">
+            <h2>ℹ️ Sistem Hakkında</h2>
+            <p><strong>Bu sayfa şunları gösteriyor:</strong></p>
+            <ul>
+                <li><strong>Çoklu Tablo Entegrasyonu:</strong> Tek bir view'da League, Team, Match, Player tablolarından veri çekimi</li>
+                <li><strong>Farklı HTML Bölümleri:</strong> Her tablo verisi ayrı bölümde sunuluyor</li>
+                <li><strong>İlişkisel Sorgular:</strong> select_related ve prefetch_related optimizasyonları</li>
+                <li><strong>Dinamik İçerik:</strong> Veritabanından canlı veri akışı</li>
+            </ul>
+            
+            <p><strong>Kullanılan Django Teknikleri:</strong></p>
+            <ul>
+                <li>Çoklu model sorguları</li>
+                <li>Template context işleme</li>
+                <li>HTML bölümlendirme</li>
+                <li>CSS grid sistemi</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>
