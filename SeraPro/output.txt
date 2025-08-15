@@ -1,0 +1,75 @@
+=== EXCEL DOSYASI ANALÝZÝ ===
+Toplam satýr sayýsý: 628
+Sütunlar: ['Sayfa_No', 'Bolum', 'Sira_No', 'Parca_Adi', 'Tam_Metin']
+
+=== ÝLK 10 SATIR ===
+   Sayfa_No  ...                                          Tam_Metin
+0         1  ...  z \n \n \n  \nSERA \nKURULUM \nVE MONTAJI  \nA...
+1         1  ...  z \n \n \n  \nSERA \nKURULUM \nVE MONTAJI  \nA...
+2         1  ...  z \n \n \n  \nSERA \nKURULUM \nVE MONTAJI  \nA...
+3         1  ...  z \n \n \n  \nSERA \nKURULUM \nVE MONTAJI  \nA...
+4         1  ...  z \n \n \n  \nSERA \nKURULUM \nVE MONTAJI  \nA...
+5         1  ...  z \n \n \n  \nSERA \nKURULUM \nVE MONTAJI  \nA...
+6         1  ...  z \n \n \n  \nSERA \nKURULUM \nVE MONTAJI  \nA...
+7         1  ...  z \n \n \n  \nSERA \nKURULUM \nVE MONTAJI  \nA...
+8         2  ...  1 \n \nGENEL ÖNERÝLER  \nBu talimatý dikkatle ...
+9         2  ...  1 \n \nGENEL ÖNERÝLER  \nBu talimatý dikkatle ...
+
+[10 rows x 5 columns]
+
+=== ÖRNEK PARÇA ADLARI ===
+1. z 
+ 
+ 
+  
+SERA 
+KURULUM 
+VE MONTAJI  
+Adres
+2. Mandýrlar Mah
+3. Tekelioðlu Cad
+4. Konyalýlar Sera Showroom Aksu
+5. ANTALYA  
+Tel
+6. konyalilarsera
+7. com  
+e-mail
+8. GENEL ÖNERÝLER  
+Bu talimatý dikkatle okuyun ve inþaat
+9. bakým ve bakým ile 
+ilgili verilen önerilere uyun
+10. Tedarikçi uygunsuzluk durumunda 
+sorumluluk kabul etmez
+11. Kötü inþaatý ortadan kaldýrmak veya önemli ölçüde azaltmak 
+için MONTAJ TALÝMAT VE KURULUM KÝTAPÇIÐIMIZI 
+kullanmanýzý tavsiye ederiz
+12. MATERYALÝN ALINMASI  
+Aldýðýnýz ürünler sahaya indirildiðinde
+13. inþaatý sýrasýnda veya 
+sonrasýn da doðabilecek zararlardan korunmak için kapsamlý bir 
+sigorta(yangýn
+14. yaptýrmanýz gerekir
+15. Size teslim edilecek olan ürünlerin sevk irsaliyesi ile birlikte paket 
+sayýlarýný
+16. hasarlý olup olmadýklarýný veya taþýmadaki bir ihmalden 
+kaynaklý bir sorun olup olmadýðýný iyi ko ntrol ediniz
+17. Hasarlý veya 
+eksik ürün varsa teslim almayýnýz
+18. Bu koþullara uymamak iddianýzý 
+geçersiz kýlacaktýr
+19. Yarý sert sac malzeme ve plastik malzemeler doðrudan 
+güneþ ýþýðýndan korunarak gölge  bir yerde muhafaza edilmelidir
+20. Uygulamadan önce çelik konstrüksiyon ve ekipmanlarýnýn olumsuz 
+hava þartlarýndan korunmalýdýr
+
+=== SAYFA DAÐILIMI ===
+Sayfa 1: 8 öðe
+Sayfa 2: 14 öðe
+Sayfa 3: 5 öðe
+Sayfa 4: 3 öðe
+Sayfa 5: 3 öðe
+Sayfa 6: 2 öðe
+Sayfa 7: 2 öðe
+Sayfa 8: 3 öðe
+Sayfa 9: 4 öðe
+Sayfa 10: 12 öðe

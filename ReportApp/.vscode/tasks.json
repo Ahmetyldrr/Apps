@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Django Testleri: tahmin app",
+			"command": "python manage.py test raporlama.tahmin",
+			"group": "test",
+			"problemMatcher": [
+				"$pytest-python"
+			]
+		}
+	]
+}

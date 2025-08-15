@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tahmin Sistemi</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .btn-custom {
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+        .input-group-text {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .stats-card {
+            background: linear-gradient(45deg, #f8f9fa, #ffffff);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            border-left: 5px solid #667eea;
+        }
+        .loading-spinner {
+            display: none;
+        }
+        .alert-custom {
+            border-radius: 15px;
+            border: none;
+        }
+    </style>
+</head>
+<body class="gradient-bg">
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 text-white fw-bold mb-3">
+                    <i class="fas fa-brain me-3"></i>AI Tahmin Sistemi
+                </h1>
+                <p class="lead text-white-50">24 Saatlik Zaman Serisi Tahmini</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Veri Girişi -->
+            <div class="col-lg-4 mb-4">
+                <div class="card card-custom h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-upload me-2"></i>Veri Girişi
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-table me-2"></i>Veri Girişi Tablosu (Excel Benzeri)
+                            </label>
+                            <small class="text-muted d-block mb-2">
+                                Excel'den kopyalayıp tabloya yapıştırabilir veya manuel girebilirsiniz
+                                <br><strong>Veri Yapısı:</strong> Her satırda 3 input değeri (ortalama alınacak) + 1 actual değer
+                            </small>
+                            
+                            <!-- Tablo kontrolleri -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-outline-success btn-sm" id="pasteFromClipboard">
+                                        <i class="fas fa-paste me-1"></i>Excel'den Yapıştır
+                                    </button>
+                                    <button type="button" class="btn btn-outline-info btn-sm ms-2" id="fillSampleData">
+                                        <i class="fas fa-fill me-1"></i>Örnek Veri
+                                    </button>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <button type="button" class="btn btn-outline-danger btn-sm" id="clearTable">
+                                        <i class="fas fa-trash me-1"></i>Temizle
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Excel benzeri tablo -->
+                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto; border: 2px solid #dee2e6; border-radius: 10px;">
+                                <table class="table table-bordered table-hover mb-0" id="inputDataTable">
+                                    <thead class="table-dark sticky-top">
+                                        <tr>
+                                            <th width="60px" class="text-center">#</th>
+                                            <th width="150px" class="text-center">Input1</th>
+                                            <th width="150px" class="text-center">Input2</th>
+                                            <th width="150px" class="text-center">Input3</th>
+                                            <th width="150px" class="text-center">Actual</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inputDataTableBody">
+                                        <!-- 24 satır dinamik olarak oluşturulacak -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="mt-2">
+                                <small class="text-info">
+                                    <i class="fas fa-lightbulb me-1"></i>
+                                    <strong>İpucu:</strong> Excel'den 4 sütun x 24 satır seçip kopyalayın, "Excel'den Yapıştır" butonuna tıklayın
+                                </small>
+                                <br>
+                                <small class="text-warning">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    <strong>Not:</strong> Türkçe sayı formatları otomatik düzeltilir (4.600 → 4600, 4,5 → 4.5)
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary btn-custom w-100 mb-2" id="predictBtn">
+                            <i class="fas fa-magic me-2"></i>Tahmin Et
+                        </button>
+                        
+                        <div class="loading-spinner text-center mt-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Yükleniyor...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Model çalışıyor...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sonuçlar ve Grafik -->
+            <div class="col-lg-8 mb-4">
+                <div class="card card-custom">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-area me-2"></i>Tahmin Sonuçları
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Uyarı mesajları -->
+                        <div id="alertContainer"></div>
+                        
+                        <!-- İstatistikler -->
+                        <div id="statsContainer" style="display: none;">
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="stats-card text-center">
+                                        <i class="fas fa-database fa-2x text-primary mb-2"></i>
+                                        <h6 class="text-muted">Toplam Veri</h6>
+                                        <h4 id="dataCount">-</h4>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card text-center">
+                                        <i class="fas fa-cogs fa-2x text-info mb-2"></i>
+                                        <h6 class="text-muted">Eğitim Verisi</h6>
+                                        <h4 id="trainingCount">-</h4>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card text-center">
+                                        <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                        <h6 class="text-muted">Gerçek Veri</h6>
+                                        <h4 id="actualCount">-</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-3">
+                                    <div class="stats-card text-center">
+                                        <i class="fas fa-arrow-up fa-2x text-success mb-2"></i>
+                                        <h6 class="text-muted">Ortalama Tahmin</h6>
+                                        <h4 id="avgPrediction">-</h4>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stats-card text-center">
+                                        <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                                        <h6 class="text-muted">Max Tahmin</h6>
+                                        <h4 id="maxPrediction">-</h4>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stats-card text-center">
+                                        <i class="fas fa-chart-line fa-2x text-warning mb-2"></i>
+                                        <h6 class="text-muted">Min Tahmin</h6>
+                                        <h4 id="minPrediction">-</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Grafik -->
+                        <div class="chart-container">
+                            <canvas id="predictionChart"></canvas>
+                        </div>
+                        
+                        <!-- Sonuçlar tablosu -->
+                        <div id="resultsTable" style="display: none;" class="mt-4">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-table me-2"></i>Detaylı Sonuçlar
+                            </h6>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Saat</th>
+                                            <th>Gerçek Değer</th>
+                                            <th>Tahmin</th>
+                                            <th>Fark</th>
+                                            <th>Fark %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultsTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let chart = null;
+        
+        // Sayfa yüklendiğinde tabloyu oluştur
+        document.addEventListener('DOMContentLoaded', function() {
+            createDataTable();
+        });
+        
+        function createDataTable() {
+            const tableBody = document.getElementById('inputDataTableBody');
+            tableBody.innerHTML = '';
+            
+            for (let i = 1; i <= 24; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="text-center fw-bold bg-light">${i}</td>
+                    <td><input type="text" class="form-control form-control-sm text-center" id="input1_${i}" placeholder="0"></td>
+                    <td><input type="text" class="form-control form-control-sm text-center" id="input2_${i}" placeholder="0"></td>
+                    <td><input type="text" class="form-control form-control-sm text-center" id="input3_${i}" placeholder="0"></td>
+                    <td><input type="text" class="form-control form-control-sm text-center" id="actual_${i}" placeholder="0"></td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+        
+        function cleanNumberFormat(value) {
+            if (!value || value.trim() === '') return null;
+            
+            let cleanVal = value.trim();
+            
+            // Hem nokta hem virgül varsa
+            if (cleanVal.includes('.') && cleanVal.includes(',')) {
+                // Nokta binlik ayırıcı, virgül ondalık
+                cleanVal = cleanVal.replace(/\./g, '').replace(',', '.');
+            } else if (cleanVal.includes('.') && !cleanVal.includes(',')) {
+                // Sadece nokta var - binlik mi ondalık mı kontrol et
+                const parts = cleanVal.split('.');
+                if (parts.length === 2 && parts[1].length === 3) {
+                    // 4.600 formatı - binlik ayırıcı
+                    cleanVal = cleanVal.replace('.', '');
+                }
+            } else if (cleanVal.includes(',')) {
+                // Sadece virgül var - ondalık ayırıcı olarak nokta yap
+                cleanVal = cleanVal.replace(',', '.');
+            }
+            
+            const parsed = parseFloat(cleanVal);
+            return isNaN(parsed) ? null : parsed;
+        }
+        
+        function getTableData() {
+            const data = [];
+            let emptyFields = 0;
+            let invalidNumbers = 0;
+            
+            // Her saat için sıralı olarak input1, input2, input3 verilerini ekle (72 veri)
+            for (let i = 1; i <= 24; i++) {
+                const input1Element = document.getElementById(`input1_${i}`);
+                const input2Element = document.getElementById(`input2_${i}`);
+                const input3Element = document.getElementById(`input3_${i}`);
+                
+                if (input1Element && input2Element && input3Element) {
+                    const input1 = cleanNumberFormat(input1Element.value);
+                    const input2 = cleanNumberFormat(input2Element.value);
+                    const input3 = cleanNumberFormat(input3Element.value);
+                    
+                    // Boş alan kontrolü
+                    if (!input1Element.value.trim()) emptyFields++;
+                    if (!input2Element.value.trim()) emptyFields++;
+                    if (!input3Element.value.trim()) emptyFields++;
+                    
+                    // Geçersiz sayı kontrolü
+                    if (input1Element.value.trim() && input1 === null) invalidNumbers++;
+                    if (input2Element.value.trim() && input2 === null) invalidNumbers++;
+                    if (input3Element.value.trim() && input3 === null) invalidNumbers++;
+                    
+                    // Her saat için sıralı olarak ekle: input1, input2, input3
+                    if (input1 !== null && input2 !== null && input3 !== null) {
+                        data.push(input1, input2, input3);
+                    }
+                }
+            }
+            
+            // Sonra tüm actual değerlerini ekle (24 veri)
+            for (let i = 1; i <= 24; i++) {
+                const actualElement = document.getElementById(`actual_${i}`);
+                
+                if (actualElement) {
+                    const actual = cleanNumberFormat(actualElement.value);
+                    
+                    // Boş alan kontrolü
+                    if (!actualElement.value.trim()) emptyFields++;
+                    
+                    // Geçersiz sayı kontrolü
+                    if (actualElement.value.trim() && actual === null) invalidNumbers++;
+                    
+                    // Actual data'ya ekle
+                    if (actual !== null) {
+                        data.push(actual);
+                    }
+                }
+            }
+            
+            console.log(`Toplam veri: ${data.length}, Training: ${data.slice(0,72).length}, Actual: ${data.slice(72).length}`);
+            console.log(`Boş alan: ${emptyFields}, Geçersiz sayı: ${invalidNumbers}`);
+            console.log('İlk 9 training veri (3 saat):', data.slice(0, 9));
+            console.log('Saat 1 (3 değer):', data.slice(0, 3), '-> Ortalama:', (data.slice(0, 3).reduce((a,b) => a+b, 0) / 3).toFixed(2));
+            console.log('İlk 6 actual veri:', data.slice(72, 78));
+            
+            if (emptyFields > 0) {
+                showAlert(`${emptyFields} boş alan var. Lütfen tüm alanları doldurun.`, 'warning');
+                return [];
+            }
+            
+            if (invalidNumbers > 0) {
+                showAlert(`${invalidNumbers} geçersiz sayı formatı var. Kontrol edin.`, 'warning');
+                return [];
+            }
+            
+            return data;
+        }
+        
+        // Excel'den yapıştır butonu
+        document.getElementById('pasteFromClipboard').addEventListener('click', async function() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    const text = await navigator.clipboard.readText();
+                    parseAndFillTable(text);
+                    showAlert('Excel verisi başarıyla yapıştırıldı!', 'success');
+                } else {
+                    // Clipboard API desteklenmiyorsa prompt kullan
+                    const text = prompt('Excel verilerinizi buraya yapıştırın:\n(4 sütun x 24 satır, tab ile ayrılmış)');
+                    if (text && text.trim()) {
+                        parseAndFillTable(text);
+                        showAlert('Veri başarıyla yapıştırıldı!', 'success');
+                    }
+                }
+            } catch (err) {
+                console.error('Clipboard error:', err);
+                // Hata durumunda prompt kullan
+                const text = prompt('Excel verilerinizi buraya yapıştırın:\n(4 sütun x 24 satır, tab ile ayrılmış)');
+                if (text && text.trim()) {
+                    parseAndFillTable(text);
+                    showAlert('Veri başarıyla yapıştırıldı!', 'success');
+                } else {
+                    showAlert('Veri yapıştırma iptal edildi veya boş veri!', 'warning');
+                }
+            }
+        });
+        
+        function parseAndFillTable(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            let filledRows = 0;
+            
+            for (let i = 0; i < Math.min(lines.length, 24); i++) {
+                // Tab, virgül veya boşluk ile ayrılmış değerleri kontrol et
+                let values = lines[i].split('\t');
+                if (values.length < 4) {
+                    // Tab ile ayrılmamışsa virgül dene
+                    values = lines[i].split(',');
+                    if (values.length < 4) {
+                        // Virgül ile de ayrılmamışsa boşluk dene
+                        values = lines[i].split(/\s+/);
+                    }
+                }
+                
+                if (values.length >= 4) {
+                    const input1Element = document.getElementById(`input1_${i + 1}`);
+                    const input2Element = document.getElementById(`input2_${i + 1}`);
+                    const input3Element = document.getElementById(`input3_${i + 1}`);
+                    const actualElement = document.getElementById(`actual_${i + 1}`);
+                    
+                    if (input1Element && input2Element && input3Element && actualElement) {
+                        input1Element.value = values[0].trim();
+                        input2Element.value = values[1].trim();
+                        input3Element.value = values[2].trim();
+                        actualElement.value = values[3].trim();
+                        filledRows++;
+                    }
+                }
+            }
+            
+            if (filledRows > 0) {
+                showAlert(`${filledRows} satır başarıyla dolduruldu!`, 'success');
+            } else {
+                showAlert('Hiçbir satır doldurulamadı. Veri formatını kontrol edin.', 'warning');
+            }
+        }
+        
+        // Örnek veri doldur
+        document.getElementById('fillSampleData').addEventListener('click', function() {
+            let baseValue = 4500;
+            
+            for (let i = 1; i <= 24; i++) {
+                // Zaman serisi benzeri artışla daha gerçekçi veriler oluştur
+                const timeEffect = (i - 1) * 5; // Her saat 5 birim artış
+                const randomVariation = (Math.random() - 0.5) * 100; // ±50 rastgele varyasyon
+                
+                const input1 = Math.round(baseValue + timeEffect + randomVariation);
+                const input2 = Math.round(baseValue + timeEffect + randomVariation + 20);
+                const input3 = Math.round(baseValue + timeEffect + randomVariation + 40);
+                const actual = Math.round(baseValue + timeEffect + randomVariation + 60);
+                
+                document.getElementById(`input1_${i}`).value = input1.toLocaleString('tr-TR');
+                document.getElementById(`input2_${i}`).value = input2.toLocaleString('tr-TR');
+                document.getElementById(`input3_${i}`).value = input3.toLocaleString('tr-TR');
+                document.getElementById(`actual_${i}`).value = actual.toLocaleString('tr-TR');
+            }
+            
+            showAlert('Örnek zaman serisi verisi dolduruldu! (Trend + rastgele varyasyon)', 'success');
+        });
+        
+        // Tabloyu temizle
+        document.getElementById('clearTable').addEventListener('click', function() {
+            for (let i = 1; i <= 24; i++) {
+                document.getElementById(`input1_${i}`).value = '';
+                document.getElementById(`input2_${i}`).value = '';
+                document.getElementById(`input3_${i}`).value = '';
+                document.getElementById(`actual_${i}`).value = '';
+            }
+            showAlert('Tablo temizlendi!', 'info');
+        });
+        
+        document.getElementById('predictBtn').addEventListener('click', function() {
+            const data = getTableData();
+            
+            if (data.length === 0) {
+                showAlert('Lütfen önce veri hatalarını düzeltin!', 'danger');
+                return;
+            }
+            
+            if (data.length !== 96) {
+                showAlert(`Tam 96 veri noktası gerekli! (24 satır x 4 sütun = 96). Mevcut: ${data.length}`, 'warning');
+                return;
+            }
+            
+            console.log('Gönderilen veri yapısı:', {
+                totalData: data.length,
+                trainingData: data.slice(0, 72).length,
+                actualData: data.slice(72).length,
+                firstHour: data.slice(0, 3),
+                firstHourAvg: (data.slice(0, 3).reduce((a,b) => a+b, 0) / 3).toFixed(2),
+                secondHour: data.slice(3, 6),
+                secondHourAvg: (data.slice(3, 6).reduce((a,b) => a+b, 0) / 3).toFixed(2),
+                firstActual: data.slice(72, 75),
+                structure: '24 saat (her saat 3 değerin ortalaması) + 24 actual değer'
+            });
+            
+            // Loading göster
+            document.querySelector('.loading-spinner').style.display = 'block';
+            document.getElementById('predictBtn').disabled = true;
+            
+            // API çağrısı
+            fetch('/predict/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    data: data
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showResults(result);
+                    showAlert('Tahmin başarıyla tamamlandı!', 'success');
+                } else {
+                    showAlert('Hata: ' + result.error, 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Bir hata oluştu: ' + error.message, 'danger');
+            })
+            .finally(() => {
+                // Loading gizle
+                document.querySelector('.loading-spinner').style.display = 'none';
+                document.getElementById('predictBtn').disabled = false;
+            });
+        });
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-custom alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'times-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            alertContainer.appendChild(alertDiv);
+            
+            // 5 saniye sonra otomatik kapat
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+        
+        function showResults(result) {
+            // İstatistikleri göster
+            document.getElementById('statsContainer').style.display = 'block';
+            document.getElementById('dataCount').textContent = result.input_data_length;
+            document.getElementById('trainingCount').textContent = result.training_data_count || 72;
+            document.getElementById('actualCount').textContent = result.actual_data_count || 24;
+            
+            const avgPred = (result.predictions.reduce((a, b) => a + b, 0) / result.predictions.length).toFixed(2);
+            const maxPred = Math.max(...result.predictions).toFixed(2);
+            const minPred = Math.min(...result.predictions).toFixed(2);
+            
+            document.getElementById('avgPrediction').textContent = avgPred;
+            document.getElementById('maxPrediction').textContent = maxPred;
+            document.getElementById('minPrediction').textContent = minPred;
+            
+            // Grafik oluştur
+            createChart(result);
+            
+            // Tablo oluştur
+            createTable(result);
+        }
+        
+        function createChart(result) {
+            const ctx = document.getElementById('predictionChart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: result.time_labels,
+                    datasets: [
+                        {
+                            label: 'Gerçek Değerler',
+                            data: result.actual,
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Tahmin Değerleri',
+                            data: result.predictions,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '24 Saatlik Tahmin vs Gerçek Değerler',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Değer'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Zaman'
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+        
+        function createTable(result) {
+            const tableBody = document.getElementById('resultsTableBody');
+            tableBody.innerHTML = '';
+            
+            for (let i = 0; i < result.time_labels.length; i++) {
+                const actual = result.actual[i];
+                const prediction = result.predictions[i];
+                const diff = prediction - actual;
+                const diffPercent = ((diff / actual) * 100).toFixed(2);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${result.time_labels[i]}</td>
+                    <td>${actual.toFixed(2)}</td>
+                    <td>${prediction.toFixed(2)}</td>
+                    <td class="${diff >= 0 ? 'text-success' : 'text-danger'}">
+                        ${diff >= 0 ? '+' : ''}${diff.toFixed(2)}
+                    </td>
+                    <td class="${diffPercent >= 0 ? 'text-success' : 'text-danger'}">
+                        ${diffPercent >= 0 ? '+' : ''}${diffPercent}%
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            document.getElementById('resultsTable').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
