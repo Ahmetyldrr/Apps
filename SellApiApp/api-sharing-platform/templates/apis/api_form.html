@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if api %}API Düzenle{% else %}Yeni API Ekle{% endif %} - API Sharing Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>{% if api %}API Düzenle{% else %}Yeni API Ekle{% endif %}</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label">API Adı *</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               value="{% if api %}{{ api.name }}{% endif %}" required>
+                        <div class="form-text">API'niz için açıklayıcı bir isim girin.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Açıklama *</label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="4" required>{% if api %}{{ api.description }}{% endif %}</textarea>
+                        <div class="form-text">API'nizin ne işe yaradığını detaylıca açıklayın.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="endpoint" class="form-label">Endpoint URL *</label>
+                        <input type="url" class="form-control" id="endpoint" name="endpoint" 
+                               value="{% if api %}{{ api.endpoint }}{% endif %}" required>
+                        <div class="form-text">API'nizin tam URL adresi (örn: https://api.example.com/v1/data)</div>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5>API Dokümantasyonu (Opsiyonel)</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="parameters" class="form-label">Parametreler</label>
+                                <textarea class="form-control" id="parameters" name="parameters" 
+                                          rows="3" placeholder="API'nizin kabul ettiği parametreleri açıklayın..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="response_format" class="form-label">Yanıt Formatı</label>
+                                <textarea class="form-control" id="response_format" name="response_format" 
+                                          rows="3" placeholder="API'nizin döndürdüğü veri formatını açıklayın..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="example_usage" class="form-label">Kullanım Örneği</label>
+                                <textarea class="form-control" id="example_usage" name="example_usage" 
+                                          rows="4" placeholder="API'nizin nasıl kullanılacağına dair örnek verin..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            {% if api %}Güncelle{% else %}Ekle{% endif %}
+                        </button>
+                        <a href="{% url 'api-list-template' %}" class="btn btn-secondary">İptal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

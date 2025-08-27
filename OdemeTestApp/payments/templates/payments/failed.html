@@ -1,0 +1,46 @@
+{% extends 'payments/base.html' %}
+
+{% block title %}Ödeme Başarısız{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white text-center">
+                <h3 class="mb-0">
+                    <i class="fas fa-times-circle fa-2x"></i>
+                </h3>
+                <h4 class="mt-2">Ödeme Başarısız!</h4>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <h5>Sipariş Detayları</h5>
+                    <hr>
+                    <p><strong>Sipariş No:</strong> {{ order.order_id }}</p>
+                    <p><strong>Ürün:</strong> {{ order.product.name }}</p>
+                    <p><strong>Tutar:</strong> ₺{{ order.amount }}</p>
+                    <p><strong>Ödeme Yöntemi:</strong> {{ order.payment_method.display_name }}</p>
+                    <p><strong>Tarih:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Ödemeniz tamamlanamadı. Lütfen bilgilerinizi kontrol edip tekrar deneyin.
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'payments:payment_page' order.product.id order.payment_method.name %}" class="btn btn-danger">
+                        <i class="fas fa-redo"></i> Tekrar Dene
+                    </a>
+                    <a href="{% url 'payments:product_detail' order.product.id %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Farklı Ödeme Yöntemi Seç
+                    </a>
+                    <a href="{% url 'payments:home' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-home"></i> Ana Sayfaya Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

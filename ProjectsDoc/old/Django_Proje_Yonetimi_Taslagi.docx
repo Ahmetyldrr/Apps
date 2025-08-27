@@ -1,0 +1,264 @@
+# DJANGO PROJESİ YÖNETİM TASLAĞI
+
+## 1. PROJE BİLGİLERİ
+**Proje Adı:** _________________________
+**Proje Kodu:** _______________________
+**Başlangıç Tarihi:** __________________
+**Hedef Bitiş Tarihi:** ________________
+**Proje Yöneticisi:** __________________
+**Geliştirici(ler):** ___________________
+**Müşteri/Talep Eden:** ________________
+**Proje Bütçesi:** ____________________
+
+## 2. PROJENİN KAPSAMI VE AMAÇLARI
+### Ana Hedef:
+_________________________________________________
+_________________________________________________
+
+### Alt Hedefler:
+1. _____________________________________________
+2. _____________________________________________
+3. _____________________________________________
+4. _____________________________________________
+
+### Proje Kapsamı:
+- İçerikler: ___________________________________
+- Sınırlar: ____________________________________
+- Kapsam Dışı: _________________________________
+
+## 3. TEKNİK GEREKSINIMLER
+
+### Backend Teknolojileri:
+- Django Version: ____________________________
+- Python Version: ____________________________
+- Veritabanı: PostgreSQL (Mevcut Sunucu)
+- Cache: Redis/Memcached (Seçiniz): ____________
+- Task Queue: Celery (Evet/Hayır): _____________
+
+### Frontend Teknolojileri:
+- Template Engine: Django Templates / React / Vue (Seçiniz): ___________
+- CSS Framework: Bootstrap / Tailwind / Custom (Seçiniz): _____________
+- JavaScript Framework: ______________________
+
+### Üçüncü Taraf Entegrasyonlar:
+- Payment Gateway: ___________________________
+- Email Service: _____________________________
+- SMS Service: _______________________________
+- File Storage: ______________________________
+- API Entegrasyonları: _______________________
+
+## 4. PROJE AŞAMALARI VE PLANLAMA
+
+### AŞAMA 1: PLANLAMA VE ANALİZ (Süre: ___ gün)
+- [ ] Gereksinim analizi tamamlandı
+- [ ] Teknik dokümantasyon hazırlandı
+- [ ] Veritabanı şeması tasarlandı
+- [ ] UI/UX tasarımı onaylandı
+- [ ] Proje mimarisi belirlendi
+- [ ] Risk analizi yapıldı
+
+### AŞAMA 2: GELIŞTIRME ORTAMI HAZIRLIĞI (Süre: ___ gün)
+- [ ] Django projesi oluşturuldu
+- [ ] Virtual environment kuruldu
+- [ ] Requirements.txt hazırlandı
+- [ ] PostgreSQL veritabanı bağlantısı yapıldı
+- [ ] GitHub repository oluşturuldu
+- [ ] GitHub Actions CI/CD pipeline'ı kuruldu
+- [ ] Development settings yapılandırıldı
+- [ ] Production settings yapılandırıldı
+
+### AŞAMA 3: BACKEND GELİŞTİRME (Süre: ___ gün)
+- [ ] Django apps oluşturuldu
+- [ ] Models tanımlandı
+- [ ] Database migrations oluşturuldu
+- [ ] Admin panel yapılandırıldı
+- [ ] API endpoints geliştirildi
+- [ ] Authentication sistemi kuruldu
+- [ ] Permission sistemi kuruldu
+- [ ] Validation kuralları eklendi
+- [ ] Unit testler yazıldı
+
+### AŞAMA 4: FRONTEND GELİŞTİRME (Süre: ___ gün)
+- [ ] Template'ler oluşturuldu
+- [ ] Static files yapılandırıldı
+- [ ] Forms geliştirildi
+- [ ] JavaScript fonksiyonları eklendi
+- [ ] Responsive tasarım uygulandı
+- [ ] Cross-browser uyumluluk test edildi
+
+### AŞAMA 5: ENTEGRASYON VE TEST (Süre: ___ gün)
+- [ ] Üçüncü taraf servisler entegre edildi
+- [ ] Integration testler yazıldı
+- [ ] Performance testleri yapıldı
+- [ ] Security testleri yapıldı
+- [ ] User acceptance testleri yapıldı
+- [ ] Bug'lar düzeltildi
+
+### AŞAMA 6: DEPLOYMENT VE YAYIN (Süre: ___ gün)
+- [ ] Production sunucusu hazırlandı
+- [ ] Domain ve SSL sertifikası yapılandırıldı
+- [ ] GitHub Actions deployment pipeline'ı test edildi
+- [ ] Production deployment yapıldı
+- [ ] Monitoring ve logging kuruldu
+- [ ] Backup sistemi kuruldu
+- [ ] Performance monitoring aktif edildi
+
+### AŞAMA 7: BAKIM VE DESTEK (Sürekli)
+- [ ] Dokümantasyon tamamlandı
+- [ ] Kullanıcı eğitimi verildi
+- [ ] Maintenance planı hazırlandı
+- [ ] Support süreçleri tanımlandı
+
+## 5. PROJE MİMARİSİ
+
+### Django Apps Yapısı:
+1. ______________________________________
+2. ______________________________________
+3. ______________________________________
+4. ______________________________________
+5. ______________________________________
+
+### URL Yapısı:
+- Ana Sayfa: /
+- API: /api/v1/
+- Admin: /admin/
+- Auth: /auth/
+- Diğer: _________________________________
+
+### Dosya Yapısı:
+```
+project_name/
+├── manage.py
+├── requirements.txt
+├── .env
+├── .gitignore
+├── README.md
+├── project_name/
+│   ├── __init__.py
+│   ├── settings/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── development.py
+│   │   └── production.py
+│   ├── urls.py
+│   └── wsgi.py
+├── apps/
+│   ├── __init__.py
+│   ├── core/
+│   ├── users/
+│   ├── [app_name]/
+│   └── ...
+├── static/
+├── media/
+├── templates/
+├── tests/
+└── docs/
+```
+
+## 6. VERİTABANI TASARIMI
+
+### Ana Tablolar:
+(Excel dosyasından otomatik alınacak)
+
+### İlişkiler:
+(Excel dosyasından otomatik alınacak)
+
+## 7. GİTHUB ACTIONS CI/CD PIPELINE
+
+### Workflow Adımları:
+- [ ] Code quality check (flake8, black)
+- [ ] Unit testler çalıştırılıyor
+- [ ] Security scan (bandit)
+- [ ] Dependencies check
+- [ ] Build process
+- [ ] Deployment to staging
+- [ ] Integration tests
+- [ ] Deployment to production
+
+## 8. GÜVENLIK KONTROLU
+
+### Django Security Checklist:
+- [ ] DEBUG = False (production)
+- [ ] SECRET_KEY güvenli
+- [ ] ALLOWED_HOSTS yapılandırıldı
+- [ ] HTTPS zorlaması aktif
+- [ ] CSRF protection aktif
+- [ ] SQL injection koruması
+- [ ] XSS koruması
+- [ ] CORS yapılandırması
+- [ ] Rate limiting uygulandı
+- [ ] Input validation kontrolü
+
+## 9. PERFORMANCE OPTİMİZASYONU
+
+### Optimizasyon Kontrolleri:
+- [ ] Database indexleri eklendi
+- [ ] Query optimization yapıldı
+- [ ] Caching stratejisi uygulandı
+- [ ] Static files optimization
+- [ ] Image optimization
+- [ ] CDN entegrasyonu
+- [ ] Gzip compression aktif
+- [ ] Database connection pooling
+
+## 10. MONİTORING VE LOGGING
+
+### Monitoring Araçları:
+- [ ] Application monitoring: ________________
+- [ ] Error tracking: _______________________
+- [ ] Performance monitoring: _______________
+- [ ] Log management: ______________________
+- [ ] Uptime monitoring: ____________________
+
+## 11. BACKUP VE RECOVERY
+
+### Backup Stratejisi:
+- [ ] Database backup (günlük/haftalık): _____
+- [ ] Media files backup: ___________________
+- [ ] Code backup (Git): ____________________
+- [ ] Recovery plan test edildi: _____________
+
+## 12. DOKÜMANTASYON
+
+### Gerekli Dokümantasyonlar:
+- [ ] API documentation
+- [ ] User manual
+- [ ] Developer documentation
+- [ ] Deployment guide
+- [ ] Troubleshooting guide
+- [ ] Change log
+
+## 13. RİSK YÖNETİMİ
+
+### Potansiyel Riskler:
+1. Risk: _____________________ | Olasılık: _____ | Etki: _____ | Önlem: _____________________
+2. Risk: _____________________ | Olasılık: _____ | Etki: _____ | Önlem: _____________________
+3. Risk: _____________________ | Olasılık: _____ | Etki: _____ | Önlem: _____________________
+
+## 14. BÜTÇe VE KAYNAK YÖNETİMİ
+
+### Maliyet Kalemleri:
+- Geliştirici saati: ________________________
+- Sunucu maliyeti: _________________________
+- Üçüncü taraf servisler: ___________________
+- Domain/SSL: ______________________________
+- Diğer: ___________________________________
+
+### Toplam Bütçe: ____________________________
+
+## 15. PROJE TAMAMLAMA
+
+### Final Kontroller:
+- [ ] Tüm gereksinimler karşılandı
+- [ ] Tüm testler başarılı
+- [ ] Performance hedefleri karşılandı
+- [ ] Security kontrolü tamamlandı
+- [ ] Dokümantasyon tamamlandı
+- [ ] Müşteri onayı alındı
+- [ ] Proje teslim edildi
+
+### Proje Teslim Tarihi: ______________________
+### Müşteri Onay Tarihi: ______________________
+
+---
+**Not:** Bu doküman proje boyunca güncel tutulmalı ve tüm değişiklikler kayıt altına alınmalıdır.

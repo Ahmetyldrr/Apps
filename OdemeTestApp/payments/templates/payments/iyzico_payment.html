@@ -1,0 +1,116 @@
+{% extends 'payments/base.html' %}
+
+{% block title %}İyzico ile Ödeme - {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-lira-sign"></i> İyzico ile Ödeme
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Sipariş Detayları</h5>
+                        <hr>
+                        <p><strong>Ürün:</strong> {{ product.name }}</p>
+                        <p><strong>Tutar:</strong> ₺{{ product.price }}</p>
+                        <p><strong>Sipariş No:</strong> {{ order.order_id }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Kredi Kartı Bilgileri</h5>
+                        <hr>
+                        <form id="iyzico-form">
+                            <div class="mb-3">
+                                <label class="form-label">Kart Numarası</label>
+                                <input type="text" class="form-control" id="card-number" placeholder="5528 7900 0000 0004" value="5528790000000004">
+                                <small class="text-muted">Test için: 5528790000000004</small>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">Son Kullanma</label>
+                                    <input type="text" class="form-control" id="expiry" placeholder="12/25" value="12/25">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" placeholder="123" value="123">
+                                </div>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">Kart Sahibi</label>
+                                <input type="text" class="form-control" id="cardholder" placeholder="Test Kullanıcı" value="Test Kullanıcı">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">TC Kimlik No</label>
+                                <input type="text" class="form-control" id="identity" placeholder="11111111111" value="11111111111">
+                                <small class="text-muted">Test için: 11111111111</small>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Test Modu:</strong> Bu gerçek bir İyzico ödemesi değildir. Test kartı numaraları kullanabilirsiniz.
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'payments:product_detail' product.id %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Geri
+                    </a>
+                    <button type="button" class="btn btn-success btn-lg" onclick="processPayment()">
+                        <i class="fas fa-lira-sign"></i> ₺{{ product.price }} Öde
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function processPayment() {
+    const button = document.querySelector('button[onclick="processPayment()"]');
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
+    
+    const paymentData = {
+        order_id: '{{ order.order_id }}',
+        payment_method: 'iyzico',
+        card_number: document.getElementById('card-number').value,
+        expiry: document.getElementById('expiry').value,
+        cvv: document.getElementById('cvv').value,
+        cardholder: document.getElementById('cardholder').value,
+        identity: document.getElementById('identity').value
+    };
+    
+    fetch('{% url "payments:process_payment" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '{% url "payments:success" order.order_id %}';
+        } else {
+            alert('Ödeme başarısız: ' + data.message);
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-lira-sign"></i> ₺{{ product.price }} Öde';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-lira-sign"></i> ₺{{ product.price }} Öde';
+    });
+}
+</script>
+{% endblock %}
