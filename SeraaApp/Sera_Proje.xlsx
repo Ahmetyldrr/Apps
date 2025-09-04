@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Title>Sera Proje Maliyet Hesaplama</Title>
+  <Author>Sera App</Author>
+  <Created>2025-08-22</Created>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>8580</WindowHeight>
+  <WindowWidth>16005</WindowWidth>
+  <WindowTopX>120</WindowTopX>
+  <WindowTopY>120</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s62">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="12" ss:Color="#000000" ss:Bold="1"/>
+   <Interior ss:Color="#B4C7E7" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s63">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="s64">
+   <NumberFormat ss:Format="#,##0.00"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+ </Styles>
+
+ <!-- 1. SEKME: Proje Tanımları -->
+ <Worksheet ss:Name="1-Proje Tanımları">
+  <Table ss:ExpandedColumnCount="3" ss:ExpandedRowCount="20" x:FullColumns="1" x:FullRows="1">
+   <Column ss:AutoFitWidth="0" ss:Width="200"/>
+   <Column ss:AutoFitWidth="0" ss:Width="150"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   
+   <Row ss:Height="25">
+    <Cell ss:StyleID="s62"><Data ss:Type="String">PROJE BİLGİLERİ</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">DEĞER</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Tünel Uzunluğu</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">250</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">m</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Tünel Sayısı</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">50</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">adet</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Tünel Genişlik</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">9.6</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">m</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Duvar Kolon Arası</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2.5</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">m</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Orta Kolon Aralığı</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">5</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">m</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Oluk Boyu</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">5</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">m</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Tek Akıntı</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">adet</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Çift Akıntılı</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">adet</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Duvar Üstü</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">adet</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Baştaki Kolonlar (80x80x5000)</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">102</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">adet</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="30">
+    <Cell ss:StyleID="s62"><Data ss:Type="String">HESAPLANAN DEĞERLER</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">SONUÇ</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Toplam Alan</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=B2*B3*B4"><Data ss:Type="Number">120000</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">m²</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Toplam Montaj Noktası</Data></Cell>
+    <Cell ss:StyleID="s63" ss:Formula="=(B2/B5+1)*(B3+1)"><Data ss:Type="Number">2601</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">adet</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Toplam Direk Uzunluğu</Data></Cell>
+    <Cell ss:StyleID="s63" ss:Formula="=B2*B3"><Data ss:Type="Number">12500</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">m</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+
+ <!-- 2. SEKME: Montaj Noktası Maliyeti -->
+ <Worksheet ss:Name="2-Montaj Noktası">
+  <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="15" x:FullColumns="1" x:FullRows="1">
+   <Column ss:AutoFitWidth="0" ss:Width="50"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   <Column ss:AutoFitWidth="0" ss:Width="250"/>
+   <Column ss:AutoFitWidth="0" ss:Width="80"/>
+   <Column ss:AutoFitWidth="0" ss:Width="80"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   
+   <Row ss:Height="25">
+    <Cell ss:StyleID="s62"><Data ss:Type="String">NO</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">İMAL KODU</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">MALZEME TANIMI</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">MİKTAR</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM FİYAT</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM AĞIRLIK</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">TOPLAM MALİYET</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">BP-01</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">70*70*1200*2,00 mm Ankaraj</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">125.50</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">5.1</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D2*E2"><Data ss:Type="Number">125.50</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">BP-02</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">80*80*3000*3,00 mm Direk</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">285.75</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">12.8</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D3*E3"><Data ss:Type="Number">285.75</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">3</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">BP-03</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Montaj Plakası 200*200*8mm</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">45.25</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2.5</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D4*E4"><Data ss:Type="Number">90.50</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">4</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">BP-04</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Bağlantı Elemanı M12*80</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">4</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">8.75</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">0.2</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D5*E5"><Data ss:Type="Number">35.00</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">5</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">BP-05</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Kaynak İşçiliği</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">65.00</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D6*E6"><Data ss:Type="Number">65.00</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="30">
+    <Cell ss:StyleID="s62" ss:MergeAcross="5"><Data ss:Type="String">1 MONTAJ NOKTASI TOPLAM MALİYET</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=SUM(G2:G6)"><Data ss:Type="Number">601.75</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+
+ <!-- 3. SEKME: 1 Metre Direk Maliyeti -->
+ <Worksheet ss:Name="3-Metre Direk">
+  <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="15" x:FullColumns="1" x:FullRows="1">
+   <Column ss:AutoFitWidth="0" ss:Width="50"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   <Column ss:AutoFitWidth="0" ss:Width="250"/>
+   <Column ss:AutoFitWidth="0" ss:Width="80"/>
+   <Column ss:AutoFitWidth="0" ss:Width="80"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   
+   <Row ss:Height="25">
+    <Cell ss:StyleID="s62"><Data ss:Type="String">NO</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">İMAL KODU</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">MALZEME TANIMI</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">MİKTAR</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM FİYAT</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM AĞIRLIK</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">TOPLAM MALİYET</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">MD-01</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">80*80*1000*2,5mm Ara Direk</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">95.25</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">7.8</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D2*E2"><Data ss:Type="Number">95.25</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">MD-02</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Bağlantı Flanşı</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">25.50</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1.2</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D3*E3"><Data ss:Type="Number">51.00</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">3</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">MD-03</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Galvaniz Boyama</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">15.75</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D4*E4"><Data ss:Type="Number">15.75</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="30">
+    <Cell ss:StyleID="s62" ss:MergeAcross="5"><Data ss:Type="String">1 METRE DİREK TOPLAM MALİYET</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=SUM(G2:G4)"><Data ss:Type="Number">162.00</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+
+ <!-- 4. SEKME: Müştemilat Direk Maliyeti -->
+ <Worksheet ss:Name="4-Müştemilat Direk">
+  <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="15" x:FullColumns="1" x:FullRows="1">
+   <Column ss:AutoFitWidth="0" ss:Width="50"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   <Column ss:AutoFitWidth="0" ss:Width="250"/>
+   <Column ss:AutoFitWidth="0" ss:Width="80"/>
+   <Column ss:AutoFitWidth="0" ss:Width="80"/>
+   <Column ss:AutoFitWidth="0" ss:Width="100"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   
+   <Row ss:Height="25">
+    <Cell ss:StyleID="s62"><Data ss:Type="String">NO</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">İMAL KODU</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">MALZEME TANIMI</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">MİKTAR</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM FİYAT</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM AĞIRLIK</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">TOPLAM MALİYET</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">MS-01</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">80*80*2500*3,0mm Müştemilat Dirrek</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">238.50</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">18.5</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D2*E2"><Data ss:Type="Number">238.50</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">MS-02</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Temel Ankrajı 70*70*800mm</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">85.25</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">3.8</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D3*E3"><Data ss:Type="Number">85.25</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">3</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">MS-03</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Üst Bağlantı Aparatı</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">45.75</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">2.2</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D4*E4"><Data ss:Type="Number">45.75</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">4</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">MS-04</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Montaj İşçiliği</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s64"><Data ss:Type="Number">75.00</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D5*E5"><Data ss:Type="Number">75.00</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="30">
+    <Cell ss:StyleID="s62" ss:MergeAcross="5"><Data ss:Type="String">1 MÜŞTEMİLAT DİREK TOPLAM MALİYET</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=SUM(G2:G5)"><Data ss:Type="Number">444.50</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+
+ <!-- 5. SEKME: Toplam Maliyet Hesaplama -->
+ <Worksheet ss:Name="5-Toplam Maliyet">
+  <Table ss:ExpandedColumnCount="4" ss:ExpandedRowCount="25" x:FullColumns="1" x:FullRows="1">
+   <Column ss:AutoFitWidth="0" ss:Width="300"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   <Column ss:AutoFitWidth="0" ss:Width="150"/>
+   
+   <Row ss:Height="30">
+    <Cell ss:StyleID="s62" ss:MergeAcross="3"><Data ss:Type="String">SERA PROJESİ TOPLAM MALİYET HESAPLAMA</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="25">
+    <Cell ss:StyleID="s62"><Data ss:Type="String">MALİYET KALEMİ</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">MİKTAR</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">BİRİM MALİYET</Data></Cell>
+    <Cell ss:StyleID="s62"><Data ss:Type="String">TOPLAM MALİYET</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Montaj Noktası Sayısı</Data></Cell>
+    <Cell ss:StyleID="s63" ss:Formula="='1-Proje Tanımları'.B14"><Data ss:Type="Number">2601</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="='2-Montaj Noktası'.G7"><Data ss:Type="Number">601.75</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=B3*C3"><Data ss:Type="Number">1565215.75</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Ara Direk Uzunluğu (metre)</Data></Cell>
+    <Cell ss:StyleID="s63" ss:Formula="='1-Proje Tanımları'.B15"><Data ss:Type="Number">12500</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="='3-Metre Direk'.G5"><Data ss:Type="Number">162.00</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=B4*C4"><Data ss:Type="Number">2025000.00</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Müştemilat Direk Sayısı</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="Number">25</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="='4-Müştemilat Direk'.G6"><Data ss:Type="Number">444.50</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=B5*C5"><Data ss:Type="Number">11112.50</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="30">
+    <Cell ss:StyleID="s62" ss:MergeAcross="2"><Data ss:Type="String">TOPLAM MALZEMe MALİYETİ</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=SUM(D3:D5)"><Data ss:Type="Number">3601328.25</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">İşçilik %15</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D6*0.15"><Data ss:Type="Number">540199.24</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Nakliye %5</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D6*0.05"><Data ss:Type="Number">180066.41</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Kar %10</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D6*0.10"><Data ss:Type="Number">360132.83</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="35">
+    <Cell ss:StyleID="s62" ss:MergeAcross="2"><Data ss:Type="String">TOPLAM PROJE MALİYETİ (KDV HARİÇ)</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=SUM(D6:D9)"><Data ss:Type="Number">4681726.73</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">KDV %20</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D10*0.20"><Data ss:Type="Number">936345.35</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="35">
+    <Cell ss:StyleID="s62" ss:MergeAcross="2"><Data ss:Type="String">TOPLAM PROJE MALİYETİ (KDV DAHİL)</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula"=D10+D11"><Data ss:Type="Number">5618072.08</Data></Cell>
+   </Row>
+   
+   <Row ss:Height="25">
+    <Cell ss:StyleID="s62" ss:MergeAcross="3"><Data ss:Type="String">M² BAŞINA MALİYET HESAPLAMA</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Toplam Alan (m²)</Data></Cell>
+    <Cell ss:StyleID="s63" ss:Formula="='1-Proje Tanımları'.B13"><Data ss:Type="Number">120000</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">M² Başına Maliyet (KDV Hariç)</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D10/B14"><Data ss:Type="Number">39.01</Data></Cell>
+   </Row>
+   
+   <Row>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">M² Başına Maliyet (KDV Dahil)</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s64" ss:Formula="=D12/B14"><Data ss:Type="Number">46.82</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+
+</workbook>
